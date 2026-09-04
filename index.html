@@ -30,6 +30,20 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
 .leverRow{display:flex;align-items:center;gap:10px;margin-top:8px}.leverLabels{display:flex;flex-direction:column;justify-content:space-between;align-items:center;height:62px;width:48px;font-size:5px;color:#76827b;letter-spacing:.08em}.pitchLever{writing-mode:vertical-lr;direction:rtl;width:18px;height:68px;accent-color:#d9f3df;flex:1}.pitchLever::-webkit-slider-thumb{width:18px;height:18px}
 #keys{grid-template-columns:repeat(10,1fr);gap:3px;margin-top:12px;height:58px}.key{position:relative;border:1px solid rgba(255,255,255,.16);border-radius:0 0 7px 7px;background:#242b27;color:#cbd2cd;box-shadow:0 5px 12px #0007;font-size:7px;transition:.12s}.key.assigned{background:linear-gradient(#5d1d20,#3a1114);border-color:rgba(255,70,70,.5);color:#ffd8d8}.key.assigned.on{background:linear-gradient(#45df79,#178f45);border-color:#8cffae;color:#06210f;box-shadow:0 0 18px rgba(55,235,115,.45)}.key.empty{opacity:.55}.key span{position:absolute;left:0;right:0;bottom:5px}.key .slotName{position:absolute;top:5px;left:2px;right:2px;font-size:4.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.key .slotState{position:absolute;top:14px;left:0;right:0;font-size:4px;letter-spacing:.05em}.key.empty .slotState{color:#707b75}.key:active{transform:translateY(2px)}
 @media(max-width:760px){.fxBtn{font-size:5.5px;padding:6px 2px}.leverLabels{height:54px;width:42px}.pitchLever{height:60px}#keys{height:48px}.key .slotName{font-size:4px}.key .slotState{top:12px;font-size:3.6px}}
+
+/* NORA V2.1 — integrated mixer / touch / arp */
+#sampler{max-height:calc(100vh - 36px);overflow:auto;overscroll-behavior:contain}
+#sampler::-webkit-scrollbar,.n21body::-webkit-scrollbar{width:4px}.n21body::-webkit-scrollbar-thumb,#sampler::-webkit-scrollbar-thumb{background:#34443a;border-radius:4px}
+#nora21{position:fixed;z-index:430;right:18px;bottom:18px;width:min(760px,calc(100vw - 400px));pointer-events:none}
+.n21bar{display:flex;justify-content:flex-end;gap:8px;pointer-events:auto}.n21toggle{border:1px solid rgba(100,230,150,.45);background:rgba(4,13,9,.92);color:#9affb8;border-radius:14px;padding:9px 13px;font-size:10px;letter-spacing:.12em;box-shadow:0 0 18px rgba(50,220,100,.12)}
+.n21panel{display:none;margin-top:8px;background:rgba(3,9,7,.95);border:1px solid rgba(100,230,150,.3);border-radius:16px;box-shadow:0 20px 70px rgba(0,0,0,.62);backdrop-filter:blur(16px);overflow:hidden;pointer-events:auto}
+#nora21.open .n21panel{display:block}.n21head{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.08)}.n21title{font-size:9px;letter-spacing:.18em;color:#dce9df}.n21close{background:none;border:0;color:#9aa79f;font-size:16px;padding:2px 6px}
+.n21body{padding:12px 14px;max-height:330px;overflow:auto}.n21row{display:flex;align-items:center;gap:9px;margin-bottom:10px}.n21label{font-size:7px;letter-spacing:.14em;color:#aab6af;min-width:52px}.n21btn{border:1px solid rgba(255,255,255,.13);background:#101714;color:#dce5df;border-radius:9px;padding:7px 10px;font-size:8px;letter-spacing:.08em}.n21btn.on{border-color:#65e99a;color:#a5ffbf;background:rgba(45,190,92,.15);box-shadow:0 0 14px rgba(65,235,120,.14)}.n21select{background:#101714;color:#e8eee9;border:1px solid rgba(255,255,255,.14);border-radius:7px;padding:5px;font-size:8px}
+.n21range{width:100%;accent-color:#59e98d}.n21master{flex:1}.n21touch{height:96px;border:1px solid rgba(85,220,130,.24);border-radius:11px;background:radial-gradient(circle at 50% 50%,rgba(70,230,120,.13),rgba(4,14,9,.75));position:relative;touch-action:none;cursor:crosshair;overflow:hidden}.n21dot{position:absolute;width:16px;height:16px;border-radius:50%;background:#8fffae;box-shadow:0 0 18px rgba(80,255,130,.75);transform:translate(-50%,-50%);left:50%;top:50%;pointer-events:none}.n21touchlabel{position:absolute;left:9px;top:7px;font-size:7px;letter-spacing:.12em;color:#95a49b;pointer-events:none}.n21touchhint{position:absolute;right:9px;bottom:7px;font-size:6px;color:#65736a;pointer-events:none}
+.n21mixer{display:grid;grid-template-columns:repeat(10,minmax(48px,1fr));gap:7px}.n21ch{min-width:0;text-align:center}.n21chno{font-size:7px;color:#a9b5ae;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.n21lamp{width:9px;height:9px;border-radius:50%;background:#6d1d22;margin:4px auto;box-shadow:0 0 0 1px rgba(255,255,255,.05)}.n21lamp.on{background:#45ed82;box-shadow:0 0 11px rgba(65,240,125,.65)}.n21fader{height:76px;width:18px;writing-mode:vertical-lr;direction:rtl;accent-color:#58e990}.n21vol{font-size:6px;color:#77847c;margin-top:1px}.n21hint{font-size:6px;color:#65726b;letter-spacing:.06em;margin-top:9px}.n21sep{height:1px;background:rgba(255,255,255,.07);margin:10px 0}
+@media(max-width:900px){#nora21{width:min(650px,calc(100vw - 380px));right:8px;bottom:8px}.n21mixer{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:760px){#sampler{bottom:6px;max-height:43vh}#nora21{left:6px;right:6px;bottom:6px;width:auto}.n21panel{margin-top:6px}.n21body{max-height:48vh}.n21mixer{grid-template-columns:repeat(5,1fr)}.n21fader{height:62px}.n21touch{height:82px}.n21bar{justify-content:flex-end}.n21toggle{padding:8px 11px}}
+
 </style>
 </head>
 <body>
@@ -68,6 +82,26 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
   <div id="keys"></div>
   <div class="hint">SOUND POINT → SELECT / PLAY → CLICK AN EMPTY NUMBER TO REGISTER · REGISTERED KEY = GREEN PLAY / RED STOP</div>
 </section>
+
+<section id="nora21">
+  <div class="n21bar"><button id="n21Toggle" class="n21toggle">MIXER / ARP</button></div>
+  <div class="n21panel">
+    <div class="n21head"><div class="n21title">NORA V2.1 · FIELD SAMPLER / MIXER</div><button id="n21Close" class="n21close">×</button></div>
+    <div class="n21body">
+      <div class="n21row"><span class="n21label">ARP</span><button class="n21btn on" data-arp="toggle" id="arpToggle">ON</button><button class="n21btn" data-arp="UP">UP</button><button class="n21btn" data-arp="DOWN">DOWN</button><button class="n21btn" data-arp="RANDOM">RANDOM</button><span class="n21label" style="min-width:auto">RATE</span><select id="arpRate" class="n21select"><option value="125">1/16</option><option value="250" selected>1/8</option><option value="500">1/4</option><option value="1000">1/2</option></select></div>
+      <div class="n21row"><span class="n21label">MASTER</span><input id="masterVol" class="n21range n21master" type="range" min="0" max="1" step=".01" value=".82"><span id="masterVal" class="n21label" style="min-width:30px;text-align:right">82%</span></div>
+      <div class="n21row"><span class="n21label">SAMPLE VOL</span><input id="sampleVol" class="n21range" type="range" min="0" max="1" step=".01" value="1"><span id="sampleVolVal" class="n21label" style="min-width:30px;text-align:right">100%</span></div>
+      <div class="n21sep"></div>
+      <div class="n21row"><span class="n21label">NORA TOUCH</span><span class="n21hint">↑↓ PITCH　←→ TEXTURE / WAH</span></div>
+      <div id="n21Touch" class="n21touch"><div class="n21touchlabel">TOUCH FIELD</div><div class="n21touchhint">指でなぞる / マウスでも操作</div><div id="n21Dot" class="n21dot"></div></div>
+      <div class="n21sep"></div>
+      <div class="n21row"><span class="n21label">10 TRACKS</span><span class="n21hint">赤＝STOP　緑＝PLAY　フェーダー＝音量</span></div>
+      <div id="n21Mixer" class="n21mixer"></div>
+      <div class="n21hint">空き番号を押す → 登録 / 登録済み番号を押す → PLAY / STOP　｜　ARPは登録済みトラックを順番に鳴らします</div>
+    </div>
+  </div>
+</section>
+
 <div id="status"></div>
 <script>
 const DIR="sounds/";
@@ -75,6 +109,8 @@ const files={spring:"01_spring.mp3",onsen:"02_onsen.mp3",river:"03_river.mp3",sh
 const labels={spring:"01 / SPRING",onsen:"02 / ONSEN",river:"03 / RIVER",shrine:"04 / SHRINE",swing:"05 / SWING",campfire:"06 / CAMPFIRE",flame:"07 / FLAME",cooking:"08 / COOKING",sauna:"09 / SAUNA",camp:"10 / CAMP"};
 const ids=Object.keys(files);let ctx=null,master=null,analyser=null,selected=null,buffer=null,loopOn=false,spaceLevel=0;
 const buffers=new Map(), voices=new Map(), slots=Array(10).fill(null), fx={drive:false,reverb:false,flanger:false,wah:false};
+const padGains=Array(10).fill(null), padLevels=Array(10).fill(1), padOn=Array(10).fill(true);
+let previewGain=null, arpOn=true, arpMode='RANDOM', arpTimer=null, arpIndex=0, touchPitch=0, touchTexture=0;
 let driveNode,driveWet,convolver,reverbWet,flangerDelay,flangerGain,flangerWet,wahFilter,wahWet,fxDry;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function msg(t){$("#status").innerHTML='<button class="closeMsg" onclick="this.parentNode.classList.remove(\'show\')">×</button>'+t;$("#status").classList.add("show")}
@@ -85,6 +121,8 @@ function initAudio(){if(ctx)return;ctx=new(window.AudioContext||window.webkitAud
   flangerDelay=ctx.createDelay();flangerDelay.delayTime.value=.012;flangerGain=ctx.createGain();flangerGain.gain.value=.003;flangerWet=ctx.createGain();flangerWet.gain.value=0;
   wahFilter=ctx.createBiquadFilter();wahFilter.type='bandpass';wahFilter.frequency.value=900;wahFilter.Q.value=4;wahWet=ctx.createGain();wahWet.gain.value=0;
   master.connect(analyser);analyser.connect(ctx.destination);
+  for(let i=0;i<10;i++){padGains[i]=ctx.createGain();padGains[i].gain.value=1;padGains[i].connect(fxDry);padGains[i].connect(driveNode);padGains[i].connect(convolver);padGains[i].connect(flangerDelay);padGains[i].connect(wahFilter);}
+  previewGain=ctx.createGain();previewGain.gain.value=1;previewGain.connect(fxDry);previewGain.connect(driveNode);previewGain.connect(convolver);previewGain.connect(flangerDelay);previewGain.connect(wahFilter);
   // parallel FX sends, preserving a dry signal
   fxDry.connect(master);driveNode.connect(driveWet).connect(master);convolver.connect(reverbWet).connect(master);flangerDelay.connect(flangerWet).connect(master);wahFilter.connect(wahWet).connect(master);
   flangerDelay.connect(flangerGain);flangerGain.connect(flangerDelay);
@@ -95,28 +133,49 @@ function makeImpulse(sec,decay){const len=Math.floor(ctx.sampleRate*sec),b=ctx.c
 async function ready(){initAudio();if(ctx.state==='suspended')await ctx.resume()}
 async function load(id){await ready();selected=id;updateUI();if(buffers.has(id)){buffer=buffers.get(id);return true}try{const res=await fetch(DIR+files[id]);if(!res.ok)throw new Error('HTTP '+res.status);const arr=await res.arrayBuffer();buffer=await ctx.decodeAudioData(arr);buffers.set(id,buffer);updateUI();return true}catch(e){console.error(e);buffer=null;msg('<b>音源を読み込めません</b><br>'+files[id]+'<br><small>sounds フォルダのMP3名・配置を確認してください。</small>');return false}}
 function setFxRouting(){const dry=fxDry;dry.gain.value=fx.drive||fx.reverb||fx.flanger||fx.wah?0.86:1;driveWet.gain.value=fx.drive?.28:0;reverbWet.gain.value=fx.reverb?.24:0;flangerWet.gain.value=fx.flanger?.65:0;wahWet.gain.value=fx.wah?.28:0}
-function connectVoice(s){s.connect(fxDry);s.connect(driveNode);s.connect(convolver);s.connect(flangerDelay);s.connect(wahFilter)}
+function connectVoice(s,slot){const g=(typeof slot==='number'&&padGains[slot])?padGains[slot]:previewGain;s.connect(g)}
 function stopVoice(slot){const v=voices.get(slot);if(v){try{v.stop()}catch(e){}try{v.disconnect()}catch(e){}voices.delete(slot)}renderKeys()}
 function stopAll(){[...voices.keys()].forEach(stopVoice);document.body.classList.remove('playing');$('#rec').classList.remove('on');$('#recText').textContent='SIGNAL / STANDBY';$$('.object').forEach(x=>x.classList.remove('active'));$('#nowName').textContent='—';$('#nowSub').textContent='サウンドポイントを選択してください。';renderKeys()}
-function startVoice(slot,id,offset=0){const b=buffers.get(id);if(!b)return;stopVoice(slot);const s=ctx.createBufferSource();s.buffer=b;s.loop=loopOn;s.playbackRate.value=Math.pow(2,+$('#pitch').value/12);connectVoice(s);voices.set(slot,s);s.onended=()=>{if(!s.loop){voices.delete(slot);renderKeys();checkPlaying()}};s.start(0,Math.max(0,Math.min(b.duration-.001,offset)));renderKeys();checkPlaying();trigger(id)}
+function startVoice(slot,id,offset=0){const b=buffers.get(id);if(!b)return;stopVoice(slot);const s=ctx.createBufferSource();s.buffer=b;s.loop=loopOn;s.playbackRate.value=Math.pow(2,+$('#pitch').value/12);connectVoice(s,slot);voices.set(slot,s);s.onended=()=>{if(!s.loop){voices.delete(slot);renderKeys();checkPlaying()}};s.start(0,Math.max(0,Math.min(b.duration-.001,offset)));renderKeys();checkPlaying();trigger(id)}
 function checkPlaying(){const p=voices.size>0;document.body.classList.toggle('playing',p);$('#rec').classList.toggle('on',p);$('#recText').textContent=p?'REC / LIVE SAMPLE':'SIGNAL / STANDBY';if(p&&selected){$('#nowName').textContent=labels[selected];$('#nowSub').textContent='FIELD SAMPLE / '+voices.size+' VOICE'+(voices.size>1?'S':'')}}
 async function selectSound(id,autoplay=true){const ok=await load(id);if(!ok)return;if(autoplay){selected=id;startSelected()}}
 function startSelected(){if(!buffer||!selected)return;const slot=slots.findIndex(x=>x===selected);if(slot>=0)startVoice(slot,selected,+buffer.duration*(+$('input#pos').value/100));else startVoice('preview',selected,+buffer.duration*(+$('input#pos').value/100))}
 function stopSelected(){if(selected){const idx=slots.findIndex(x=>x===selected);if(idx>=0)stopVoice(idx);stopVoice('preview')}checkPlaying()}
 async function playSelected(){await ready();if(!selected){await selectSound(ids[0]);return}startSelected()}
-function assignSlot(i){if(!selected){msg('<b>まず音源を選択してください。</b><br>シーン上のサウンドポイントをクリックしてください。');return}slots[i]=selected;renderKeys()}
-function toggleSlot(i){const id=slots[i];if(!id){assignSlot(i);return}selected=id;load(id).then(()=>{if(voices.has(i))stopVoice(i);else startVoice(i,id,+buffer.duration*(+$('input#pos').value/100));updateUI()})}
+function assignSlot(i){if(!selected){msg('<b>まず音源を選択してください。</b><br>シーン上のサウンドポイントをクリックしてください。');return}slots[i]=selected;padLevels[i]=1;padOn[i]=true;if(padGains[i])padGains[i].gain.value=1;renderKeys();renderMixer()}
+function toggleSlot(i){const id=slots[i];if(!id){assignSlot(i);return}selected=id;load(id).then(()=>{if(!padOn[i])return;if(voices.has(i))stopVoice(i);else startVoice(i,id,+buffer.duration*(+$('input#pos').value/100));updateUI();renderMixer()})}
+
+function setPadVolume(i,v){padLevels[i]=+v;if(padGains[i])padGains[i].gain.value=padOn[i]?padLevels[i]:0;renderMixer()}
+function setPadState(i,on){padOn[i]=!!on;if(padGains[i])padGains[i].gain.value=padOn[i]?padLevels[i]:0;if(!on)stopVoice(i);renderMixer()}
+function triggerPad(i){const id=slots[i];if(!id||!padOn[i])return;load(id).then(()=>startVoice(i,id,0))}
+function renderMixer(){const box=$('#n21Mixer');if(!box)return;box.innerHTML='';for(let i=0;i<10;i++){const ch=document.createElement('div');ch.className='n21ch';const name=slots[i]?labels[slots[i]].split(' / ')[1]:'EMPTY';ch.innerHTML=`<div class="n21chno">${String(i+1).padStart(2,'0')} ${name}</div><button class="n21lamp ${voices.has(i)?'on':''}" title="ON/OFF"></button><input class="n21fader" type="range" min="0" max="1" step=".01" value="${padLevels[i]}"><div class="n21vol">${Math.round(padLevels[i]*100)}%</div>`;const lamp=ch.querySelector('.n21lamp'),f=ch.querySelector('.n21fader');lamp.disabled=!slots[i];lamp.onclick=()=>{if(!slots[i])return;setPadState(i,!padOn[i]);};f.disabled=!slots[i];f.oninput=()=>setPadVolume(i,f.value);box.appendChild(ch)}}
+function arpCandidates(){return slots.map((id,i)=>id&&padOn[i]?i:null).filter(i=>i!==null)}
+function arpStep(){if(!arpOn)return;const c=arpCandidates();if(!c.length)return;if(arpMode==='RANDOM')arpIndex=Math.floor(Math.random()*c.length);else{if(arpIndex>=c.length)arpIndex=0;else if(arpMode==='DOWN')arpIndex=(arpIndex-1+c.length)%c.length;else arpIndex=(arpIndex+1)%c.length}triggerPad(c[arpIndex]);renderMixer()}
+function restartArp(){clearInterval(arpTimer);arpTimer=null;if(arpOn)arpTimer=setInterval(arpStep,+$('#arpRate').value)}
+function setMaster(v){if(master)master.gain.value=+v;$('#masterVal').textContent=Math.round(+v*100)+'%'}
+function setSampleVolume(v){const idx=selected?slots.findIndex(x=>x===selected):-1;if(idx>=0)setPadVolume(idx,v);else if(previewGain)previewGain.gain.value=+v;$('#sampleVolVal').textContent=Math.round(+v*100)+'%'}
+function applyTouch(x,y){const rect=$('#n21Touch').getBoundingClientRect();const nx=Math.max(0,Math.min(1,(x-rect.left)/rect.width)),ny=Math.max(0,Math.min(1,(y-rect.top)/rect.height));touchPitch=Math.round((.5-ny)*24);touchTexture=nx;$('#n21Dot').style.left=(nx*100)+'%';$('#n21Dot').style.top=(ny*100)+'%';$('#pitch').value=touchPitch;$('#pitchLever').value=touchPitch;updateUI();if(wahFilter)wahFilter.frequency.value=350+nx*4200;if(fx.wah&&wahWet)wahWet.gain.value=.34;}
 function updateUI(){if(!selected){$('#sampleName').textContent='SELECT A SOUND';$('#sampleNo').textContent='—'}else{$('#sampleName').textContent=labels[selected].split(' / ')[1];$('#sampleNo').textContent=labels[selected].split(' / ')[0]}
   const pv=+$('input#pitch').value;$('#pitchVal').textContent=(pv>0?'+':'')+pv+' st';$('#posVal').textContent=Math.round(+$('input#pos').value)+'%';$('#loopBtn').textContent=loopOn?'LOOP ON':'LOOP OFF';
   voices.forEach(v=>v.playbackRate.value=Math.pow(2,pv/12));
+  if($('#n21Mixer'))renderMixer();
 }
-function renderKeys(){const keyEls=$$('#keys .key');keyEls.forEach((b,i)=>{const id=slots[i];b.classList.toggle('empty',!id);b.classList.toggle('assigned',!!id);b.classList.toggle('on',!!id&&voices.has(i));b.querySelector('.slotName').textContent=id?(labels[id].split(' / ')[1]):'EMPTY';b.querySelector('.slotState').textContent=!id?'REGISTER':(voices.has(i)?'PLAY':'STOP')})}
+function renderKeys(){const keyEls=$$('#keys .key');keyEls.forEach((b,i)=>{const id=slots[i];b.classList.toggle('empty',!id);b.classList.toggle('assigned',!!id);b.classList.toggle('on',!!id&&voices.has(i));b.querySelector('.slotName').textContent=id?(labels[id].split(' / ')[1]):'EMPTY';b.querySelector('.slotState').textContent=!id?'REGISTER':(voices.has(i)?'PLAY':'STOP')});if($('#n21Mixer'))renderMixer()}
 $('#playBtn').onclick=playSelected;$('#stopBtn').onclick=stopSelected;$('#loopBtn').onclick=()=>{loopOn=!loopOn;updateUI();voices.forEach(v=>v.loop=loopOn)};
 $('#pitch').oninput=()=>{const v=+$('input#pitch').value;$('#pitchLever').value=v;updateUI()};$('#pitchLever').oninput=()=>{$('#pitch').value=$('#pitchLever').value;updateUI()};$('#pos').oninput=updateUI;
 $$('.fxBtn').forEach(b=>b.onclick=()=>{const k=b.dataset.fx;fx[k]=!fx[k];b.classList.toggle('on',fx[k]);setFxRouting()});
 $('#stopAll').onclick=stopAll;$$('.object').forEach(e=>e.addEventListener('click',ev=>{ev.stopPropagation();selectSound(e.dataset.id,true)}));
 const keys=$('#keys');ids.forEach((id,i)=>{const b=document.createElement('button');b.className='key empty';b.innerHTML='<div class="slotName">EMPTY</div><div class="slotState">REGISTER</div><span>'+(i===9?'0':String(i+1))+'</span>';b.title='空き: 現在選択中の音を登録 / 登録済み: 再生・停止';b.onclick=()=>toggleSlot(i);keys.appendChild(b)});
 window.addEventListener('keydown',e=>{if(e.repeat||['INPUT','BUTTON'].includes(document.activeElement.tagName))return;const n=e.key==='0'?10:+e.key;if(n>=1&&n<=10){const b=keys.children[n-1];b.classList.add('on');setTimeout(()=>renderKeys(),130);toggleSlot(n-1)}});
+
+// V2.1 controls are wired to the real audio engine
+window.noraSetPadVolume=setPadVolume;window.noraSetPadState=setPadState;window.noraTriggerPad=triggerPad;window.noraSetPitch=v=>{$('#pitch').value=v;$('#pitchLever').value=v;updateUI()};window.noraSetTexture=v=>{if(wahFilter)wahFilter.frequency.value=350+v*4200};window.noraSetMasterVolume=setMaster;window.noraSetSampleVolume=setSampleVolume;
+$('#n21Toggle').onclick=()=>$('#nora21').classList.toggle('open');$('#n21Close').onclick=()=>$('#nora21').classList.remove('open');
+$$('.n21btn').forEach(b=>b.onclick=()=>{const k=b.dataset.arp;if(k==='toggle'){arpOn=!arpOn;b.textContent=arpOn?'ON':'OFF';b.classList.toggle('on',arpOn);restartArp();return}if(k){arpMode=k;$$('.n21btn[data-arp]').forEach(x=>{if(x.dataset.arp!=='toggle')x.classList.toggle('on',x.dataset.arp===arpMode)})}});
+$('#arpRate').onchange=restartArp;$('#masterVol').oninput=e=>setMaster(e.target.value);$('#sampleVol').oninput=e=>setSampleVolume(e.target.value);
+const touch=$('#n21Touch');let touching=false;touch.addEventListener('pointerdown',e=>{touching=true;touch.setPointerCapture(e.pointerId);applyTouch(e.clientX,e.clientY)});touch.addEventListener('pointermove',e=>{if(touching)applyTouch(e.clientX,e.clientY)});touch.addEventListener('pointerup',e=>{touching=false});touch.addEventListener('pointercancel',e=>{touching=false});
+renderMixer();restartArp();
+
 function trigger(id){const el=document.querySelector('[data-id="'+id+'"]');if(!el)return;if(id==='river'||id==='spring')for(let i=0;i<5;i++)setTimeout(()=>ripple(el),i*180);if(id==='onsen'||id==='sauna')for(let i=0;i<7;i++)setTimeout(()=>steam(el),i*150);if(id==='campfire'||id==='flame'){const f=$('.fire');f.style.transform='scale(1.5)';setTimeout(()=>f.style.transform='',650)}if(id==='swing')el.animate([{transform:'rotate(0)'},{transform:'rotate(8deg)'},{transform:'rotate(-7deg)'},{transform:'rotate(0)'}],1000);if(id==='shrine')$('#flash').animate([{opacity:0},{opacity:.45},{opacity:0}],260)}
 function ripple(el){const r=document.createElement('div');r.className='ripple';r.style.left=(el.offsetLeft+27)+'px';r.style.top=(el.offsetTop+27)+'px';$('#scene').appendChild(r);setTimeout(()=>r.remove(),1600)}function steam(el){const s=document.createElement('div');s.className='steam';s.style.left=(el.offsetLeft+20+Math.random()*25)+'px';s.style.top=(el.offsetTop+15)+'px';$('#scene').appendChild(s);setTimeout(()=>s.remove(),2400)}
 for(let i=0;i<65;i++){const t=document.createElement('span');t.style.cssText=`position:absolute;left:${Math.random()*100}%;top:${25+Math.random()*70}%;width:0;height:0;border-left:34px solid transparent;border-right:34px solid transparent;border-bottom:${75+Math.random()*55}px solid #10281f;transform:scale(${.5+Math.random()*.9});filter:drop-shadow(0 12px 13px #000);opacity:.88`;$('#forest').appendChild(t)}
@@ -126,102 +185,4 @@ function meters(){if(!analyser)return;const td=new Float32Array(analyser.fftSize
 function loop(){meters();requestAnimationFrame(loop)}
 loop();updateUI();renderKeys();
 </script>
-
-<!-- NORA V2.1 -->
-<style>
-#nora21{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:99999;width:min(1180px,96vw);font-family:Arial,sans-serif;color:#eaffea;pointer-events:none}
-.n21panel{pointer-events:auto;background:rgba(8,12,10,.82);backdrop-filter:blur(12px);border:1px solid rgba(120,255,150,.25);border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.38);padding:12px}
-.n21top{display:flex;gap:8px;align-items:center;justify-content:space-between}
-.n21title{font-size:11px;letter-spacing:.16em;opacity:.8}
-.n21btn{border:1px solid rgba(120,255,150,.35);background:rgba(20,30,24,.85);color:#dfffe5;border-radius:10px;padding:7px 11px;cursor:pointer}
-.n21btn.on{background:rgba(35,170,75,.28);box-shadow:0 0 16px rgba(60,255,100,.35);color:#8dffab}
-.n21arp{display:none;margin-top:9px;gap:6px;align-items:center;flex-wrap:wrap}
-.n21arp.open{display:flex}
-.n21small{font-size:9px;letter-spacing:.08em;opacity:.7}
-.n21mixer{display:none;margin-top:10px;grid-template-columns:repeat(10,1fr);gap:6px}
-.n21mixer.open{display:grid}
-.n21ch{text-align:center;font-size:8px;min-width:0}
-.n21lamp{width:9px;height:9px;border-radius:50%;margin:5px auto;background:#5b1d1d;box-shadow:0 0 4px #300;cursor:pointer}
-.n21lamp.on{background:#4cff7a;box-shadow:0 0 13px #4cff7a}
-.n21fader{height:88px;width:100%;accent-color:#55e979;writing-mode:vertical-lr;direction:rtl}
-.n21vol{display:flex;align-items:center;gap:8px;margin-top:8px}
-.n21vol input{flex:1;accent-color:#55e979}
-.n21xy{margin-top:9px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.n21touch{height:92px;border:1px solid rgba(120,255,150,.25);border-radius:14px;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 50%,rgba(100,255,140,.16),rgba(0,0,0,.08));touch-action:none}
-.n21dot{position:absolute;width:15px;height:15px;border-radius:50%;background:#9affb0;box-shadow:0 0 18px #54ff7d;left:50%;top:50%;transform:translate(-50%,-50%)}
-@media(max-width:700px){#nora21{bottom:5px}.n21mixer{grid-template-columns:repeat(5,1fr)}.n21fader{height:70px}.n21touch{height:82px}}
-</style>
-
-<div id="nora21">
- <div class="n21panel">
-  <div class="n21top">
-   <div class="n21title">NORA V2.1 · FIELD SAMPLER / MIXER</div>
-   <div>
-    <button class="n21btn" id="n21arpBtn">ARP OFF</button>
-    <button class="n21btn" id="n21mixBtn">MIXER</button>
-   </div>
-  </div>
-
-  <div class="n21arp" id="n21arp">
-   <span class="n21small">ARP</span>
-   <button class="n21btn n21arpMode on" data-mode="up">UP</button>
-   <button class="n21btn n21arpMode" data-mode="down">DOWN</button>
-   <button class="n21btn n21arpMode" data-mode="random">RANDOM</button>
-   <span class="n21small">RATE</span>
-   <select id="n21rate"><option value="125">1/16</option><option value="250">1/8</option><option value="500">1/4</option><option value="1000">1/2</option></select>
-  </div>
-
-  <div class="n21vol">
-   <span class="n21small">MASTER</span>
-   <input id="n21master" type="range" min="0" max="1" step=".01" value=".8">
-  </div>
-
-  <div class="n21xy">
-   <div class="n21touch" id="n21touch"><div class="n21dot" id="n21dot"></div></div>
-   <div>
-    <div class="n21small">NORA TOUCH</div>
-    <div style="font-size:11px;margin-top:4px">↑↓ PITCH · ←→ TEXTURE</div>
-    <div class="n21vol"><span class="n21small">SAMPLE</span><input id="n21sampleVol" type="range" min="0" max="1" step=".01" value="1"></div>
-   </div>
-  </div>
-
-  <div class="n21mixer" id="n21mixer"></div>
- </div>
-</div>
-
-<script>
-(()=>{
- const names=["SPRING","ONSEN","RIVER","SHRINE","SWING","CAMPFIRE","FLAME","COOKING","SAUNA","CAMP"];
- const mixer=document.getElementById("n21mixer");
- const state=names.map(n=>({name:n,vol:.8,on:false}));
- names.forEach((n,i)=>{
-   const c=document.createElement("div");c.className="n21ch";
-   c.innerHTML=`<div>${String(i+1).padStart(2,"0")} ${n}</div><div class="n21lamp"></div><input class="n21fader" type="range" min="0" max="1" step=".01" value=".8"><div class="n21small">VOL</div>`;
-   const lamp=c.querySelector(".n21lamp"), f=c.querySelector(".n21fader");
-   f.oninput=()=>{state[i].vol=+f.value;if(window.noraSetPadVolume)window.noraSetPadVolume(i,+f.value)};
-   lamp.onclick=()=>{state[i].on=!state[i].on;lamp.classList.toggle("on",state[i].on);if(window.noraSetPadState)window.noraSetPadState(i,state[i].on)};
-   mixer.appendChild(c);
- });
- document.getElementById("n21mixBtn").onclick=e=>{mixer.classList.toggle("open");e.currentTarget.classList.toggle("on")};
-
- let arpOn=false,mode="up",timer=null,step=0;
- const arp=document.getElementById("n21arp"),arpBtn=document.getElementById("n21arpBtn");
- arpBtn.onclick=()=>{arpOn=!arpOn;arp.classList.toggle("open",arpOn);arpBtn.textContent=arpOn?"ARP ON":"ARP OFF";arpBtn.classList.toggle("on",arpOn);arpOn?startArp():stopArp()};
- document.querySelectorAll(".n21arpMode").forEach(b=>b.onclick=()=>{document.querySelectorAll(".n21arpMode").forEach(x=>x.classList.remove("on"));b.classList.add("on");mode=b.dataset.mode});
- function active(){return state.map((s,i)=>s.on?i:-1).filter(i=>i>=0)}
- function trigger(i){if(window.noraTriggerPad)window.noraTriggerPad(i);else{const e=document.querySelector(`[data-key="${i+1}"],[data-pad="${i+1}"]`);if(e)e.click()}}
- function startArp(){stopArp();const tick=()=>{const a=active();if(a.length){let i;if(mode==="random")i=a[Math.floor(Math.random()*a.length)];else{const o=mode==="down"?a.slice().reverse():a;i=o[step%o.length];step++}trigger(i)}timer=setTimeout(tick,+document.getElementById("n21rate").value)};tick()}
- function stopArp(){if(timer){clearTimeout(timer);timer=null}}
-
- const touch=document.getElementById("n21touch"),dot=document.getElementById("n21dot");let drag=false;
- function move(e){if(!drag)return;const r=touch.getBoundingClientRect(),x=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),y=Math.max(0,Math.min(1,(e.clientY-r.top)/r.height));dot.style.left=x*100+"%";dot.style.top=y*100+"%";if(window.noraSetPitch)window.noraSetPitch((.5-y)*24);if(window.noraSetTexture)window.noraSetTexture(x)}
- touch.onpointerdown=e=>{drag=true;touch.setPointerCapture(e.pointerId);move(e)}
- touch.onpointermove=move
- touch.onpointerup=()=>{drag=false;dot.style.left="50%";dot.style.top="50%";if(window.noraSetPitch)window.noraSetPitch(0)}
- touch.onpointercancel=()=>{drag=false}
- document.getElementById("n21master").oninput=e=>{if(window.noraSetMasterVolume)window.noraSetMasterVolume(+e.target.value)}
- document.getElementById("n21sampleVol").oninput=e=>{if(window.noraSetSampleVolume)window.noraSetSampleVolume(+e.target.value)}
-})();
-</script>
-
 </body></html>
