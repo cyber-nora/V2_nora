@@ -17,13 +17,13 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
 #keys{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;margin-top:12px;height:54px}.key{position:relative;border:1px solid rgba(255,255,255,.16);border-radius:0 0 7px 7px;background:linear-gradient(#f0f0e8,#bfc5bd);color:#1c211e;box-shadow:0 5px 12px #0007;font-size:7px}.key span{position:absolute;left:0;right:0;bottom:5px}.key.active,.key:active{background:var(--accent);transform:translateY(2px);box-shadow:0 2px 7px #0008}.hint{margin-top:7px;font-size:6px;color:#68736d;letter-spacing:.08em}
 #hud{position:fixed;z-index:310;right:20px;top:18px;width:330px;padding:12px;border-radius:13px}.hudtop{display:flex;justify-content:space-between;font-size:7px;letter-spacing:.16em;color:#a9b4ad}.meter{height:10px;margin:5px 0 1px;border:1px solid #27352e;background:repeating-linear-gradient(90deg,#18211d 0 7px,#0b110e 7px 10px);overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#34d66a 0 67%,#e2e84a 78%,#ff982c 91%,#ed3731);box-shadow:0 0 10px rgba(65,230,115,.38)}.ticks{display:flex;justify-content:space-between;color:#68736d;font-size:6px;margin-bottom:5px}.recrow{display:flex;align-items:center;gap:7px;margin-top:5px;font-size:7px;letter-spacing:.13em}.rec{width:9px;height:9px;border-radius:50%;background:#3c433f}.rec.on{background:#ff2222;box-shadow:0 0 8px 3px rgba(255,30,30,.62);animation:pulse .85s infinite}@keyframes pulse{50%{opacity:.35}}.wave{height:43px;width:100%;display:block}.waveLine{fill:none;stroke:url(#waveGrad);stroke-width:2.2}
 #now{position:fixed;z-index:305;right:20px;top:207px;width:330px;padding:10px 12px;border-radius:11px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:.25s}body.playing #now{opacity:1;visibility:visible;transform:none}.nowTitle{font-size:7px;letter-spacing:.18em;color:#8e9993}.nowName{font-size:14px;margin-top:3px}.nowSub{font-size:7px;color:#89958e;margin-top:2px}.stop{margin-top:7px;border:1px solid rgba(255,255,255,.14);background:#101714;color:#eee;border-radius:16px;padding:5px 10px;font-size:7px}
-.object{position:absolute;z-index:200;cursor:pointer;user-select:none;touch-action:manipulation;transition:transform .2s,filter .2s}.object:hover{transform:scale(1.06)}.object.active{filter:brightness(1.5) drop-shadow(0 0 18px var(--accent))}.objCore{width:55px;height:55px;border:1px solid rgba(255,255,255,.58);border-radius:50%;display:grid;place-items:center;background:rgba(4,12,10,.48);backdrop-filter:blur(6px);font-size:23px;box-shadow:0 0 0 4px rgba(255,255,255,.035)}.objLabel{font-size:7px;text-align:center;letter-spacing:.08em;margin-top:6px;text-shadow:0 2px 9px #000;white-space:nowrap}
+.object{position:absolute;z-index:200;cursor:pointer;user-select:none;touch-action:none;transition:transform .2s,filter .2s}.object:hover{transform:scale(1.06)}.object.active{filter:brightness(1.5) drop-shadow(0 0 18px var(--accent))}.objCore{width:55px;height:55px;border:1px solid rgba(255,255,255,.58);border-radius:50%;display:grid;place-items:center;background:rgba(4,12,10,.48);backdrop-filter:blur(6px);font-size:23px;box-shadow:0 0 0 4px rgba(255,255,255,.035)}.objLabel{font-size:7px;text-align:center;letter-spacing:.08em;margin-top:6px;text-shadow:0 2px 9px #000;white-space:nowrap}
 #spring{left:43%;top:18%}#onsen{left:55%;top:24%}#riverObj{left:34%;top:43%}#shrine{left:69%;top:27%}#swing{left:78%;top:43%}#campfire{left:50%;top:58%}#flameObj{left:60%;top:53%}#cooking{left:70%;top:61%}#sauna{left:30%;top:61%}#whole{left:49%;top:75%}
 .ground{position:absolute;left:4%;right:4%;bottom:-5%;height:67%;background:radial-gradient(ellipse at 50% 35%,rgba(60,108,78,.72),transparent 49%),radial-gradient(ellipse at 50% 100%,#08130e 0,#14271d 60%,transparent 61%);transform:rotateX(55deg);transform-origin:50% 100%}.path{position:absolute;left:47%;bottom:1%;width:10%;height:72%;background:linear-gradient(90deg,transparent,#293c30 24%,#455446 50%,#1b2b22 76%,transparent);transform:skewX(-10deg)}.river{position:absolute;left:6%;top:12%;width:28%;height:84%;border-radius:48% 42% 55% 35%;background:repeating-radial-gradient(ellipse at 50% 50%,rgba(65,166,171,.85) 0 3px,rgba(20,73,72,.78) 5px 13px,rgba(6,35,34,.86) 16px 28px);transform:rotate(-9deg);filter:drop-shadow(0 0 20px rgba(45,200,200,.2));animation:water 5s ease-in-out infinite}@keyframes water{50%{filter:drop-shadow(0 0 32px rgba(70,220,210,.38)) brightness(1.12)}}
 .camp{position:absolute;left:51%;top:49%;width:270px;height:170px;transform:translate(-50%,-50%);filter:drop-shadow(0 25px 30px rgba(0,0,0,.55))}.tent{position:absolute;left:18px;bottom:15px;width:150px;height:92px;background:linear-gradient(135deg,#b9a77d,#4b4433);clip-path:polygon(50% 0,100% 100%,0 100%)}.tent:after{content:"";position:absolute;left:57px;bottom:0;width:35px;height:50px;background:#171714;box-shadow:0 0 17px rgba(255,190,78,.25)}.tent2{position:absolute;right:12px;bottom:20px;width:108px;height:70px;background:linear-gradient(135deg,#8f8367,#35372e);clip-path:polygon(50% 0,100% 100%,0 100%)}.fire{position:absolute;left:116px;bottom:0;width:55px;height:72px;transform-origin:50% 100%;transition:transform .2s;filter:drop-shadow(0 0 18px rgba(255,99,22,.65))}.flame{position:absolute;left:8px;bottom:0;width:38px;height:61px;background:linear-gradient(#ffe66b,#ff9b20 45%,#e4381a);clip-path:polygon(50% 0,75% 28%,64% 25%,90% 55%,65% 100%,18% 100%,0 63%,28% 30%);animation:flame 1s ease-in-out infinite alternate}@keyframes flame{to{transform:scale(.86,.94) rotate(2deg)}}.lamp{position:absolute;right:6px;bottom:42px;width:13px;height:13px;border-radius:50%;background:#ffd878;box-shadow:0 0 22px 8px rgba(255,193,76,.35)}
 #rain{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .4s;background:repeating-linear-gradient(105deg,transparent 0 22px,rgba(165,210,230,.26) 23px,transparent 25px 42px);animation:rain .45s linear infinite}@keyframes rain{to{background-position:-30px 60px}}#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}.ripple{position:absolute;width:18px;height:18px;border:2px solid var(--accent);border-radius:50%;pointer-events:none;animation:ripple 1.5s ease-out forwards}@keyframes ripple{to{width:190px;height:190px;opacity:0;transform:translate(-86px,-86px)}}.steam{position:absolute;width:8px;height:55px;border-radius:50%;background:linear-gradient(90deg,transparent,rgba(240,240,230,.4),transparent);filter:blur(4px);animation:steam 2.4s infinite ease-out}@keyframes steam{to{transform:translateY(-80px) translateX(12px);opacity:0}}
 #status{position:fixed;z-index:500;left:50%;top:50%;transform:translate(-50%,-50%);max-width:min(440px,88vw);padding:16px 18px;background:rgba(5,10,8,.96);border:1px solid rgba(255,255,255,.16);border-radius:12px;font-size:10px;line-height:1.65;display:none;box-shadow:0 20px 60px #000}.show{display:block!important}.closeMsg{float:right;background:none;border:0;color:#aaa;font-size:16px}
-@media(max-width:760px){header{left:10px;top:9px}.brand{font-size:18px}.tag{font-size:6px}#hud{right:7px;top:7px;width:220px;padding:8px}.wave{height:34px}#now{right:7px;top:132px;width:220px;padding:8px}#sampler{left:6px;right:6px;bottom:6px;width:auto;padding:8px}.sampleName{font-size:13px}.objCore{width:43px;height:43px;font-size:18px}.objLabel{font-size:5.3px}#spring{left:25%;top:18%}#onsen{left:50%;top:23%}#riverObj{left:10%;top:40%}#shrine{left:73%;top:27%}#swing{left:78%;top:41%}#campfire{left:43%;top:48%}#flameObj{left:59%;top:46%}#cooking{left:73%;top:52%}#sauna{left:25%;top:54%}#whole{left:48%;top:57%}.ground{height:61%}.river{width:33%;height:73%;top:17%}.camp{transform:translate(-50%,-50%) scale(.78);top:46%}#keys{height:45px}.btn{padding:5px 8px;font-size:6px}}
+#voiceMemo{position:fixed;z-index:405;left:50%;bottom:18px;transform:translateX(-50%);width:min(360px,calc(100vw - 30px));padding:10px 12px;border-radius:13px}.vmTop{display:flex;justify-content:space-between;align-items:center}.vmTitle{font-size:7px;letter-spacing:.18em}.vmState{font-size:6px;color:#8e9993}.vmBtns{display:flex;gap:6px;margin-top:7px}.vmBtn{border:1px solid rgba(255,255,255,.14);background:#101714;color:#eee;border-radius:15px;padding:6px 10px;font-size:7px;letter-spacing:.1em}.vmBtn.recOn{border-color:#ff4b4b;color:#fff;box-shadow:0 0 14px rgba(255,40,40,.2)}.vmHint{font-size:6px;color:#68736d;margin-top:6px}.object.voiceObj .objCore{border-color:#ff9a3d}.object.voiceObj.playing .objCore{border-color:#7dffa5}.object.voiceObj{z-index:265}@media(max-width:760px){#voiceMemo{left:7px;right:7px;bottom:calc(43vh + 12px);transform:none;width:auto}header{left:10px;top:9px}.brand{font-size:18px}.tag{font-size:6px}#hud{right:7px;top:7px;width:220px;padding:8px}.wave{height:34px}#now{right:7px;top:132px;width:220px;padding:8px}#sampler{left:6px;right:6px;bottom:6px;width:auto;padding:8px}.sampleName{font-size:13px}.objCore{width:43px;height:43px;font-size:18px}.objLabel{font-size:5.3px}#spring{left:25%;top:18%}#onsen{left:50%;top:23%}#riverObj{left:10%;top:40%}#shrine{left:73%;top:27%}#swing{left:78%;top:41%}#campfire{left:43%;top:48%}#flameObj{left:59%;top:46%}#cooking{left:73%;top:52%}#sauna{left:25%;top:54%}#whole{left:48%;top:57%}.ground{height:61%}.river{width:33%;height:73%;top:17%}.camp{transform:translate(-50%,-50%) scale(.78);top:46%}#keys{height:45px}.btn{padding:5px 8px;font-size:6px}}
 @media(max-width:430px){#hud{width:205px}.brand{font-size:16px}.tag{font-size:5px}#now{width:205px;top:126px}.objCore{width:39px;height:39px;font-size:16px}#sampler{font-size:8px}.key{font-size:6px}}
 
 .nowActions{display:flex;gap:6px;margin-top:7px}.stop.loopOn{border-color:#72e69a;color:#fff;box-shadow:0 0 12px rgba(114,230,154,.2)}.stop.loopOff{color:#9aa59f}.object.kept{filter:brightness(1.15) drop-shadow(0 0 10px rgba(217,243,223,.22))}.object.kept .objCore{border-color:rgba(114,230,154,.72);box-shadow:0 0 0 4px rgba(114,230,154,.07),0 0 18px rgba(114,230,154,.12)}.keepMark{position:absolute;right:-2px;top:-3px;width:8px;height:8px;border-radius:50%;background:#72e69a;box-shadow:0 0 8px rgba(114,230,154,.65);display:none}.object.kept .keepMark{display:block}
@@ -49,7 +49,7 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
 /* NORA TOUCH FIELD */
 #touchGuide{position:fixed;z-index:340;left:20px;bottom:18px;width:390px;padding:12px 14px;border-radius:13px;pointer-events:none;background:rgba(4,10,8,.78)}
 .tgTitle{font-size:8px;letter-spacing:.2em;color:#dce9df}.tgSub{font-size:7px;line-height:1.55;color:#8f9c95;margin-top:5px}.tgAxis{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:7px;color:#66746c;font-size:6px;letter-spacing:.06em}.tgAxis b{color:#d9f3df;font-weight:500}
-.object.touching{transition:none;z-index:260;filter:brightness(1.45) drop-shadow(0 0 24px rgba(120,255,160,.7))}.object.playing .objCore{border-color:#7dffa5;box-shadow:0 0 0 4px rgba(90,240,130,.08),0 0 22px rgba(70,240,120,.35)}
+.object.touching{transition:none;z-index:260;filter:brightness(1.45) drop-shadow(0 0 24px rgba(120,255,160,.7))}.object:not(.playing) .objCore{border-color:#ff4b4b;box-shadow:0 0 0 4px rgba(255,55,55,.08),0 0 15px rgba(255,55,55,.12)}.object.playing .objCore{border-color:#7dffa5;box-shadow:0 0 0 4px rgba(90,240,130,.08),0 0 22px rgba(70,240,120,.35)}
 #touchReadout{position:fixed;z-index:450;left:50%;top:72%;transform:translate(-50%,-50%);padding:7px 11px;border:1px solid rgba(120,255,160,.24);border-radius:12px;background:rgba(3,10,7,.72);font-size:7px;letter-spacing:.12em;color:#a8b7ae;opacity:0;transition:opacity .15s;pointer-events:none;backdrop-filter:blur(8px)}#touchReadout.show{opacity:1}.readoutMain{color:#e7f4ea;font-size:9px}
 @media(max-width:760px){#touchGuide{left:7px;right:7px;bottom:7px;width:auto;padding:9px 10px}.tgSub{font-size:6px}.tgAxis{font-size:5.5px}.objCore{touch-action:none}#touchReadout{top:70%}}
 </style>
@@ -79,14 +79,16 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
   <div class="recrow"><span id="rec" class="rec"></span><span id="recText">SIGNAL / STANDBY</span></div>
   <svg class="wave" viewBox="0 0 330 50" preserveAspectRatio="none"><defs><linearGradient id="waveGrad"><stop offset="0" stop-color="#ef332e"/><stop offset=".35" stop-color="#ff8b22"/><stop offset=".65" stop-color="#ffe047"/><stop offset="1" stop-color="#42e07b"/></linearGradient></defs><path id="wavePath" class="waveLine" d="M0 25 L330 25"/></svg>
 </section>
-<section id="now" class="panel"><div class="nowTitle">NOW SAMPLING</div><div id="nowName" class="nowName">—</div><div id="nowSub" class="nowSub">サウンドポイントを選択してください。</div><div class="nowActions"><button id="stopAll" class="stop">STOP</button><button id="loopBtn" class="stop loopOff">LOOP OFF</button></div></section>
+<section id="now" class="panel"><div class="nowTitle">NOW SAMPLING</div><div id="nowName" class="nowName">—</div><div id="nowSub" class="nowSub">サウンドポイントを選択してください。</div><div class="nowActions"><button id="stopAll" class="stop">STOP</button><button id="loopBtn" class="stop loopOff">LOOP OFF</button></div><div class="nowActions"><button id="allReset" class="stop">ALL RESET</button><button id="allStop" class="stop">ALL STOP</button><button id="allPlay" class="stop">ALL PLAY</button></div></section>
 <section id="touchGuide" class="panel">
   <div class="tgTitle">NORA TOUCH FIELD</div>
   <div class="tgSub">タップ → PLAY / STOP　｜　ドラッグ → 音を変えてその位置にKEEP　｜　ダブルタップ → ORIGINAL</div>
-  <div class="tgAxis"><span>← SPACE / ECHO</span><b>ORIGINAL / BYPASS</b><span>FILTER / DRIVE →</span></div>
-  <div class="tgAxis"><span>↓ PITCH</span><span>↑ PITCH</span></div>
+  <div class="tgAxis"><span>← SLOW</span><b>ORIGINAL</b><span>FAST →</span></div>
+  <div class="tgAxis"><span>↓ LOW PITCH</span><span>↑ HIGH PITCH</span></div>
+  <div class="tgSub">動かした距離に応じて軽いFXも加わります。中央へ戻すと完全バイパス。</div>
 </section>
 
+<section id="voiceMemo" class="panel"><div class="vmTop"><span class="vmTitle">VOICE MEMO / FIELD REC</span><span id="vmState" class="vmState">READY</span></div><div class="vmBtns"><button id="vmRec" class="vmBtn">● REC</button><button id="vmStop" class="vmBtn">■ STOP</button><button id="vmPlay" class="vmBtn">▶ PLAY</button></div><div class="vmHint">マイクで歌・声・楽器を録音。録音後は新しい音源としてFIELDに追加されます。</div></section>
 <div id="touchReadout"></div><div id="status"></div>
 
 <script>
@@ -94,8 +96,12 @@ const DIR="sounds/";
 const files={spring:"01_spring.mp3",onsen:"02_onsen.mp3",river:"03_river.mp3",shrine:"04_shrine.mp3",swing:"05_swing.mp3",campfire:"06_campfire.mp3",flame:"07_flame.mp3",cooking:"08_cooking.mp3",sauna:"09_sauna.mp3",camp:"10_camp.mp3"};
 const labels={spring:"SPRING",onsen:"ONSEN",river:"RIVER",shrine:"SHRINE",swing:"SWING",campfire:"CAMPFIRE",flame:"FLAME",cooking:"COOKING",sauna:"SAUNA",camp:"CAMP"};
 const ids=Object.keys(files), $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function labelOf(id){return labelOf(id)||customLabels.get(id)||id.toUpperCase()}
+function fileOf(id){return files[id]||null}
 let ctx=null, master=null, analyser=null;
 const buffers=new Map(), voices=new Map(), states=new Map();
+const customBuffers=new Map(), customLabels=new Map();
+let mediaStream=null, mediaRecorder=null, mediaChunks=[], voiceReady=false;
 const originalPos=new Map();
 const keptOffset=new Map();
 const loopState=new Map(ids.map(id=>[id,false]));
@@ -114,6 +120,7 @@ async function ready(){initAudio(); if(ctx.state==='suspended') await ctx.resume
 
 async function load(id){
   await ready();
+  if(customBuffers.has(id)) return customBuffers.get(id);
   if(buffers.has(id)) return buffers.get(id);
   try{
     const res=await fetch(DIR+files[id]);
@@ -128,10 +135,11 @@ async function load(id){
   }
 }
 
-function setReadout(id,pitch,effect){
+function setReadout(id,pitch,effect,speed=1){
   const el=$('#touchReadout');
   const p=(pitch>0?'+':'')+pitch+' st';
-  el.innerHTML='<span class="readoutMain">'+labels[id]+'</span><br>'+p+'　·　'+effect;
+  const sp=(speed>1.02?'FAST '+Math.round(speed*100)+'%':speed<.98?'SLOW '+Math.round(speed*100)+'%':'100%');
+  el.innerHTML='<span class="readoutMain">'+labelOf(id)+'</span><br>'+p+'　·　'+sp+'　·　'+effect;
   el.classList.add('show');
   clearTimeout(touchReadoutTimer);
   touchReadoutTimer=setTimeout(()=>el.classList.remove('show'),350);
@@ -156,42 +164,39 @@ function updatePlayingState(){
   document.body.classList.toggle('playing',p);
   $('#rec').classList.toggle('on',p);
   $('#recText').textContent=p?'REC / LIVE FIELD':'SIGNAL / STANDBY';
-  if(p){const last=selectedId&&voices.has(selectedId)?selectedId:[...voices.keys()].at(-1);selectedId=last;$('#nowName').textContent=labels[last]||'FIELD';$('#nowSub').textContent='タップでSTOP / ドラッグでTOUCH / ダブルタップでORIGINAL';}
+  if(p){const last=selectedId&&voices.has(selectedId)?selectedId:[...voices.keys()].at(-1);selectedId=last;$('#nowName').textContent=labelOf(last)||'FIELD';$('#nowSub').textContent='タップでSTOP / ドラッグでTOUCH / ダブルタップでORIGINAL';}
   else if(selectedId){$('#nowName').textContent=labels[selectedId]||'FIELD';$('#nowSub').textContent='停止中 · ダブルタップでORIGINAL';}
   else{$('#nowName').textContent='—';$('#nowSub').textContent='サウンドポイントを選択してください。';}
   updateLoopButton();
 }
 
-function effectForX(nx){
-  // center = true bypass. Left = space/echo, right = filter/drive.
-  const d=nx-.5;
-  if(Math.abs(d)<.055) return {name:'ORIGINAL / BYPASS',mode:'dry',amount:0};
-  if(d<0){
-    const a=Math.min(1,Math.abs(d)/.5);
-    return {name:'SPACE / ECHO',mode:'space',amount:a};
-  }
-  const a=Math.min(1,d/.5);
-  return {name:'FILTER / DRIVE',mode:'filter',amount:a};
+function effectForTouch(nx,ny){
+  const dx=nx-.5, dy=ny-.5;
+  const amount=Math.min(1,Math.hypot(dx,dy)/.5);
+  if(amount<.08) return {name:'ORIGINAL / BYPASS',mode:'dry',amount:0};
+  // Effect is a subtle secondary layer: left side = space, right side = filter/drive.
+  if(dx<0) return {name:'SPACE / ECHO',mode:'space',amount};
+  return {name:'FILTER / DRIVE',mode:'filter',amount};
 }
 
 function applyVoiceTouch(v,nx,ny){
+  // Y = pitch, X = speed. Center is the recorded original.
   const pitch=Math.round((.5-ny)*24);
-  const rate=Math.pow(2,pitch/12);
-  v.source.playbackRate.setTargetAtTime(rate,ctx.currentTime,.018);
-  const ef=effectForX(nx);
-  // Keep one lightweight dry path; effects are only mixed in while away from center.
+  const speed=Math.pow(2,(nx-.5)*2);
+  v.source.playbackRate.setTargetAtTime(speed,ctx.currentTime,.018);
+  const ef=effectForTouch(nx,ny);
   if(ef.mode==='dry'){
-    v.filter.type='lowpass'; v.filter.frequency.value=22000; v.filter.Q.value=.7;
+    v.filter.frequency.setTargetAtTime(22000,ctx.currentTime,.03); v.filter.Q.value=.7;
     v.drive.gain.value=0; v.space.gain.value=0; v.delay.gain.value=0;
   }else if(ef.mode==='filter'){
-    const f=22000-(ef.amount*20500);
-    v.filter.type='lowpass'; v.filter.frequency.setTargetAtTime(Math.max(450,f),ctx.currentTime,.025); v.filter.Q.value=1.2+ef.amount*7;
-    v.drive.gain.value=ef.amount*.24; v.space.gain.value=0; v.delay.gain.value=ef.amount*.12;
+    const f=22000-(ef.amount*19000);
+    v.filter.frequency.setTargetAtTime(Math.max(700,f),ctx.currentTime,.03); v.filter.Q.value=1+ef.amount*5;
+    v.drive.gain.value=ef.amount*.2; v.space.gain.value=0; v.delay.gain.value=ef.amount*.08;
   }else{
-    v.filter.type='lowpass'; v.filter.frequency.setTargetAtTime(22000-ef.amount*5000,ctx.currentTime,.025); v.filter.Q.value=1;
-    v.drive.gain.value=0; v.space.gain.value=ef.amount*.34; v.delay.gain.value=ef.amount*.2;
+    v.filter.frequency.setTargetAtTime(22000-ef.amount*4500,ctx.currentTime,.03); v.filter.Q.value=1;
+    v.drive.gain.value=0; v.space.gain.value=ef.amount*.25; v.delay.gain.value=ef.amount*.14;
   }
-  return {pitch,effect:ef.name};
+  return {pitch,speed,effect:ef.name};
 }
 
 async function play(id){
@@ -242,7 +247,7 @@ function setOriginalPosition(el, resetAudio=true){
   if(resetAudio){
     const id=el.dataset.id, v=voices.get(id);
     if(v) applyVoiceTouch(v,.5,.5);
-    setReadout(id,0,'ORIGINAL / BYPASS');
+    setReadout(id,0,'ORIGINAL / BYPASS',1);
   }
 }
 function pointerPos(e){return {x:e.clientX,y:e.clientY};}
@@ -264,8 +269,8 @@ function moveTouch(e){
   // The icon stays where the user leaves it. Position is persistent.
   el.style.transform=`translate(${totalX}px,${totalY}px) scale(1.1)`;
   const v=voices.get(a.id);
-  if(v){const r=applyVoiceTouch(v,nx,ny);setReadout(a.id,r.pitch,r.effect);}
-  else setReadout(a.id,Math.round((.5-ny)*24),effectForX(nx).name);
+  if(v){const r=applyVoiceTouch(v,nx,ny);setReadout(a.id,r.pitch,r.effect,r.speed);}
+  else setReadout(a.id,Math.round((.5-ny)*24),effectForTouch(nx,ny).name,Math.pow(2,(nx-.5)*2));
 }
 function resetToOriginal(el){
   const id=el.dataset.id;
@@ -312,11 +317,9 @@ function endTouch(e){
 
 $$('.object').forEach(el=>{
   originalPos.set(el.id,{left:getComputedStyle(el).left,top:getComputedStyle(el).top});
+  keptOffset.set(el.id,{x:0,y:0});
   const mark=document.createElement('span'); mark.className='keepMark'; el.appendChild(mark);
-  el.addEventListener('pointerdown',e=>beginTouch(e,el));
-  el.addEventListener('pointermove',moveTouch);
-  el.addEventListener('pointerup',endTouch);
-  el.addEventListener('pointercancel',endTouch);
+  bindObject(el);
 });
 
 function updateLoopButton(){
@@ -337,7 +340,51 @@ $('#loopBtn').onclick=async()=>{
   $('#nowSub').textContent=on?'LOOP中 · ダブルタップでORIGINAL':'再生中 · ドラッグでTOUCH / ダブルタップでORIGINAL';
 };
 
-$('#stopAll').onclick=stopAll;
+$('#stopAll').onclick=()=>{if(selectedId)stopVoice(selectedId);};
+$('#allStop').onclick=stopAll;
+$('#allReset').onclick=()=>{stopAll(); $$('.object').forEach(el=>setOriginalPosition(el,false)); loopState.forEach((_,id)=>loopState.set(id,false)); updatePlayingState();};
+$('#allPlay').onclick=async()=>{await ready(); for(const id of ids){ if(!voices.has(id)) await play(id); }};
+
+async function startVoiceRecording(){
+  try{
+    await ready();
+    if(!navigator.mediaDevices?.getUserMedia){msg('このブラウザではマイク録音に対応していません。');return;}
+    if(mediaRecorder && mediaRecorder.state==='recording')return;
+    mediaStream=await navigator.mediaDevices.getUserMedia({audio:true});
+    const mime=['audio/webm;codecs=opus','audio/webm','audio/mp4'].find(t=>MediaRecorder.isTypeSupported(t))||'';
+    mediaRecorder=mime?new MediaRecorder(mediaStream,{mimeType:mime}):new MediaRecorder(mediaStream);
+    mediaChunks=[];
+    mediaRecorder.ondataavailable=e=>{if(e.data.size)mediaChunks.push(e.data)};
+    mediaRecorder.onstop=async()=>{
+      const blob=new Blob(mediaChunks,{type:mediaRecorder.mimeType||'audio/webm'});
+      mediaChunks=[]; mediaStream?.getTracks().forEach(t=>t.stop()); mediaStream=null;
+      try{
+        const arr=await blob.arrayBuffer(); const b=await ctx.decodeAudioData(arr);
+        const id='voice'; customBuffers.set(id,b); customLabels.set(id,'VOICE MEMO'); voiceReady=true;
+        let el=document.querySelector('[data-id="voice"]');
+        if(!el){
+          el=document.createElement('div'); el.className='object voiceObj'; el.id='voiceObj'; el.dataset.id=id; el.style.left='48%'; el.style.top='82%';
+          el.innerHTML='<div class="objCore">●</div><div class="objLabel">VOICE MEMO</div>'; $('#scene').appendChild(el);
+          originalPos.set(el.id,{left:'48%',top:'82%'}); keptOffset.set(el.id,{x:0,y:0});
+          const mark=document.createElement('span');mark.className='keepMark';el.appendChild(mark); bindObject(el);
+        }
+        selectedId=id; $('#vmState').textContent='RECORDED'; msg('録音した音をVOICE MEMOとしてFIELDに追加しました。アイコンをタップして再生できます。');
+        updatePlayingState();
+      }catch(err){console.error(err);msg('録音データを音源として読み込めませんでした。');}
+    };
+    mediaRecorder.start(); $('#vmState').textContent='RECORDING'; $('#vmRec').classList.add('recOn');
+  }catch(err){console.error(err);msg('マイクへのアクセスが許可されませんでした。HTTPSのページでマイクを許可してください。');}
+}
+function stopVoiceRecording(){if(mediaRecorder&&mediaRecorder.state==='recording'){mediaRecorder.stop();$('#vmState').textContent='PROCESSING';$('#vmRec').classList.remove('recOn');}}
+async function playVoiceMemo(){if(voiceReady){selectedId='voice';play('voice')}}
+$('#vmRec').onclick=startVoiceRecording; $('#vmStop').onclick=stopVoiceRecording; $('#vmPlay').onclick=playVoiceMemo;
+
+function bindObject(el){
+  el.addEventListener('pointerdown',e=>beginTouch(e,el));
+  el.addEventListener('pointermove',moveTouch);
+  el.addEventListener('pointerup',endTouch);
+  el.addEventListener('pointercancel',endTouch);
+}
 
 function trigger(id){
   const el=document.querySelector('[data-id="'+id+'"]');if(!el)return;
