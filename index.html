@@ -26,6 +26,7 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
 @media(max-width:760px){header{left:10px;top:9px}.brand{font-size:18px}.tag{font-size:6px}#hud{right:7px;top:7px;width:220px;padding:8px}.wave{height:34px}#now{right:7px;top:132px;width:220px;padding:8px}#sampler{left:6px;right:6px;bottom:6px;width:auto;padding:8px}.sampleName{font-size:13px}.objCore{width:43px;height:43px;font-size:18px}.objLabel{font-size:5.3px}#spring{left:25%;top:18%}#onsen{left:50%;top:23%}#riverObj{left:10%;top:40%}#shrine{left:73%;top:27%}#swing{left:78%;top:41%}#campfire{left:43%;top:48%}#flameObj{left:59%;top:46%}#cooking{left:73%;top:52%}#sauna{left:25%;top:54%}#whole{left:48%;top:57%}.ground{height:61%}.river{width:33%;height:73%;top:17%}.camp{transform:translate(-50%,-50%) scale(.78);top:46%}#keys{height:45px}.btn{padding:5px 8px;font-size:6px}}
 @media(max-width:430px){#hud{width:205px}.brand{font-size:16px}.tag{font-size:5px}#now{width:205px;top:126px}.objCore{width:39px;height:39px;font-size:16px}#sampler{font-size:8px}.key{font-size:6px}}
 
+.nowActions{display:flex;gap:6px;margin-top:7px}.stop.loopOn{border-color:#72e69a;color:#fff;box-shadow:0 0 12px rgba(114,230,154,.2)}.stop.loopOff{color:#9aa59f}.object.kept{filter:brightness(1.15) drop-shadow(0 0 10px rgba(217,243,223,.22))}.object.kept .objCore{border-color:rgba(114,230,154,.72);box-shadow:0 0 0 4px rgba(114,230,154,.07),0 0 18px rgba(114,230,154,.12)}.keepMark{position:absolute;right:-2px;top:-3px;width:8px;height:8px;border-radius:50%;background:#72e69a;box-shadow:0 0 8px rgba(114,230,154,.65);display:none}.object.kept .keepMark{display:block}
 .danger{border-color:rgba(255,70,70,.3)}.fx{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:10px}.fxBtn{border:1px solid rgba(255,255,255,.13);background:#111714;color:#d8ded9;border-radius:8px;padding:7px 3px;font-size:6px;letter-spacing:.1em}.fxBtn.on{color:#fff;border-color:#72e69a;box-shadow:0 0 12px rgba(72,230,122,.2);background:rgba(47,180,90,.13)}
 .leverRow{display:flex;align-items:center;gap:10px;margin-top:8px}.leverLabels{display:flex;flex-direction:column;justify-content:space-between;align-items:center;height:62px;width:48px;font-size:5px;color:#76827b;letter-spacing:.08em}.pitchLever{writing-mode:vertical-lr;direction:rtl;width:18px;height:68px;accent-color:#d9f3df;flex:1}.pitchLever::-webkit-slider-thumb{width:18px;height:18px}
 #keys{grid-template-columns:repeat(10,1fr);gap:3px;margin-top:12px;height:58px}.key{position:relative;border:1px solid rgba(255,255,255,.16);border-radius:0 0 7px 7px;background:#242b27;color:#cbd2cd;box-shadow:0 5px 12px #0007;font-size:7px;transition:.12s}.key.assigned{background:linear-gradient(#5d1d20,#3a1114);border-color:rgba(255,70,70,.5);color:#ffd8d8}.key.assigned.on{background:linear-gradient(#45df79,#178f45);border-color:#8cffae;color:#06210f;box-shadow:0 0 18px rgba(55,235,115,.45)}.key.empty{opacity:.55}.key span{position:absolute;left:0;right:0;bottom:5px}.key .slotName{position:absolute;top:5px;left:2px;right:2px;font-size:4.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.key .slotState{position:absolute;top:14px;left:0;right:0;font-size:4px;letter-spacing:.05em}.key.empty .slotState{color:#707b75}.key:active{transform:translateY(2px)}
@@ -78,10 +79,10 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
   <div class="recrow"><span id="rec" class="rec"></span><span id="recText">SIGNAL / STANDBY</span></div>
   <svg class="wave" viewBox="0 0 330 50" preserveAspectRatio="none"><defs><linearGradient id="waveGrad"><stop offset="0" stop-color="#ef332e"/><stop offset=".35" stop-color="#ff8b22"/><stop offset=".65" stop-color="#ffe047"/><stop offset="1" stop-color="#42e07b"/></linearGradient></defs><path id="wavePath" class="waveLine" d="M0 25 L330 25"/></svg>
 </section>
-<section id="now" class="panel"><div class="nowTitle">NOW SAMPLING</div><div id="nowName" class="nowName">—</div><div id="nowSub" class="nowSub">サウンドポイントを選択してください。</div><button id="stopAll" class="stop">STOP</button></section>
+<section id="now" class="panel"><div class="nowTitle">NOW SAMPLING</div><div id="nowName" class="nowName">—</div><div id="nowSub" class="nowSub">サウンドポイントを選択してください。</div><div class="nowActions"><button id="stopAll" class="stop">STOP</button><button id="loopBtn" class="stop loopOff">LOOP OFF</button></div></section>
 <section id="touchGuide" class="panel">
   <div class="tgTitle">NORA TOUCH FIELD</div>
-  <div class="tgSub">サウンドポイントをタップ → PLAY / STOP　｜　再生中に指で動かす → 音を変える</div>
+  <div class="tgSub">タップ → PLAY / STOP　｜　ドラッグ → 音を変えてその位置にKEEP　｜　ダブルタップ → ORIGINAL</div>
   <div class="tgAxis"><span>← SPACE / ECHO</span><b>ORIGINAL / BYPASS</b><span>FILTER / DRIVE →</span></div>
   <div class="tgAxis"><span>↓ PITCH</span><span>↑ PITCH</span></div>
 </section>
@@ -96,7 +97,9 @@ const ids=Object.keys(files), $=s=>document.querySelector(s), $$=s=>[...document
 let ctx=null, master=null, analyser=null;
 const buffers=new Map(), voices=new Map(), states=new Map();
 const originalPos=new Map();
-let activeDrag=null, dragMoved=false, touchReadoutTimer=null;
+const keptOffset=new Map();
+const loopState=new Map(ids.map(id=>[id,false]));
+let activeDrag=null, dragMoved=false, touchReadoutTimer=null, clickTimer=null, lastTap=0, selectedId=null;
 
 function msg(t){$('#status').innerHTML='<button class="closeMsg" onclick="this.parentNode.classList.remove(\'show\')">×</button>'+t;$('#status').classList.add('show')}
 
@@ -141,6 +144,7 @@ function stopVoice(id){
   try{v.source.disconnect()}catch(e){}
   [v.input,v.filter,v.drive,v.delay,v.feedback,v.space,v.gain].forEach(n=>{try{n&&n.disconnect()}catch(e){}});
   voices.delete(id);
+  if(selectedId===id) updateLoopButton();
   const el=document.querySelector('[data-id="'+id+'"]');
   if(el)el.classList.remove('playing','active');
   updatePlayingState();
@@ -152,8 +156,10 @@ function updatePlayingState(){
   document.body.classList.toggle('playing',p);
   $('#rec').classList.toggle('on',p);
   $('#recText').textContent=p?'REC / LIVE FIELD':'SIGNAL / STANDBY';
-  if(p){const last=[...voices.keys()].at(-1);$('#nowName').textContent=labels[last]||'FIELD';$('#nowSub').textContent='タップでSTOP / 再生中に動かしてTOUCH';}
+  if(p){const last=selectedId&&voices.has(selectedId)?selectedId:[...voices.keys()].at(-1);selectedId=last;$('#nowName').textContent=labels[last]||'FIELD';$('#nowSub').textContent='タップでSTOP / ドラッグでTOUCH / ダブルタップでORIGINAL';}
+  else if(selectedId){$('#nowName').textContent=labels[selectedId]||'FIELD';$('#nowSub').textContent='停止中 · ダブルタップでORIGINAL';}
   else{$('#nowName').textContent='—';$('#nowSub').textContent='サウンドポイントを選択してください。';}
+  updateLoopButton();
 }
 
 function effectForX(nx){
@@ -189,10 +195,11 @@ function applyVoiceTouch(v,nx,ny){
 }
 
 async function play(id){
+  selectedId=id;
   await ready();
   if(voices.has(id)){stopVoice(id);return;}
   const b=await load(id); if(!b)return;
-  const source=ctx.createBufferSource(); source.buffer=b; source.loop=false; source.playbackRate.value=1;
+  const source=ctx.createBufferSource(); source.buffer=b; source.loop=!!loopState.get(id); source.playbackRate.value=1;
   const input=ctx.createGain(); input.gain.value=1;
   const filter=ctx.createBiquadFilter(); filter.type='lowpass'; filter.frequency.value=22000; filter.Q.value=.7;
   const drive=ctx.createWaveShaper(); drive.curve=makeDriveCurve(0); drive.oversample='2x';
@@ -227,14 +234,23 @@ function makeImpulse(sec,decay){
   return b;
 }
 
-function setOriginalPosition(el){
+function setOriginalPosition(el, resetAudio=true){
   const p=originalPos.get(el.id); if(!p)return;
-  el.style.left=p.left;el.style.top=p.top;el.style.transform='';
+  el.style.left=p.left; el.style.top=p.top; el.style.transform='';
+  keptOffset.set(el.id,{x:0,y:0});
+  el.classList.remove('kept');
+  if(resetAudio){
+    const id=el.dataset.id, v=voices.get(id);
+    if(v) applyVoiceTouch(v,.5,.5);
+    setReadout(id,0,'ORIGINAL / BYPASS');
+  }
 }
 function pointerPos(e){return {x:e.clientX,y:e.clientY};}
 function beginTouch(e,el){
+  if(e.pointerType==='mouse' && e.button!==0)return;
   e.preventDefault(); e.stopPropagation();
-  activeDrag={el,id:el.dataset.id,startX:e.clientX,startY:e.clientY,lastX:e.clientX,lastY:e.clientY};
+  const base=keptOffset.get(el.id)||{x:0,y:0};
+  activeDrag={el,id:el.dataset.id,startX:e.clientX,startY:e.clientY,lastX:e.clientX,lastY:e.clientY,pointerId:e.pointerId,baseX:base.x,baseY:base.y};
   dragMoved=false; el.setPointerCapture?.(e.pointerId); el.classList.add('touching');
 }
 function moveTouch(e){
@@ -242,36 +258,84 @@ function moveTouch(e){
   const a=activeDrag,el=a.el;
   const dx=e.clientX-a.startX,dy=e.clientY-a.startY;
   if(Math.hypot(dx,dy)>5)dragMoved=true;
-  const nx=Math.max(0,Math.min(1,.5+dx/130));
-  const ny=Math.max(0,Math.min(1,.5+dy/130));
-  el.style.transform=`translate(${dx}px,${dy}px) scale(1.1)`;
+  const totalX=a.baseX+dx, totalY=a.baseY+dy;
+  const nx=Math.max(0,Math.min(1,.5+totalX/130));
+  const ny=Math.max(0,Math.min(1,.5+totalY/130));
+  // The icon stays where the user leaves it. Position is persistent.
+  el.style.transform=`translate(${totalX}px,${totalY}px) scale(1.1)`;
   const v=voices.get(a.id);
   if(v){const r=applyVoiceTouch(v,nx,ny);setReadout(a.id,r.pitch,r.effect);}
   else setReadout(a.id,Math.round((.5-ny)*24),effectForX(nx).name);
+}
+function resetToOriginal(el){
+  const id=el.dataset.id;
+  setOriginalPosition(el,true);
+  const v=voices.get(id);
+  if(v) applyVoiceTouch(v,.5,.5);
+  selectedId=id;
+  updatePlayingState();
+}
+function handleSingleTap(id){
+  selectedId=id;
+  play(id);
 }
 function endTouch(e){
   if(!activeDrag)return;
   const a=activeDrag,el=a.el,id=a.id;
   el.classList.remove('touching');
-  if(!dragMoved){play(id);}
-  else{
-    const v=voices.get(id);
-    if(v){
-      // Returning to the origin returns the sound to true bypass/original state.
-      applyVoiceTouch(v,.5,.5);
-    }
-  }
-  setOriginalPosition(el);
+  try{el.releasePointerCapture?.(a.pointerId)}catch(err){}
   activeDrag=null;
+  if(dragMoved){
+    // Keep the moved position. Do not snap back.
+    el.classList.add('kept');
+    selectedId=id;
+    const dx=e.clientX-a.startX,dy=e.clientY-a.startY;
+    const totalX=a.baseX+dx,totalY=a.baseY+dy;
+    keptOffset.set(id,{x:totalX,y:totalY});
+    const nx=Math.max(0,Math.min(1,.5+totalX/130)), ny=Math.max(0,Math.min(1,.5+totalY/130));
+    el.style.transform=`translate(${totalX}px,${totalY}px)`;
+    const v=voices.get(id);
+    if(v) applyVoiceTouch(v,nx,ny);
+    updatePlayingState();
+    return;
+  }
+  const now=performance.now();
+  if(now-lastTap<360){
+    clearTimeout(clickTimer); clickTimer=null; lastTap=0;
+    resetToOriginal(el);
+    return;
+  }
+  lastTap=now;
+  clearTimeout(clickTimer);
+  clickTimer=setTimeout(()=>{clickTimer=null;handleSingleTap(id)},230);
 }
 
 $$('.object').forEach(el=>{
   originalPos.set(el.id,{left:getComputedStyle(el).left,top:getComputedStyle(el).top});
+  const mark=document.createElement('span'); mark.className='keepMark'; el.appendChild(mark);
   el.addEventListener('pointerdown',e=>beginTouch(e,el));
   el.addEventListener('pointermove',moveTouch);
   el.addEventListener('pointerup',endTouch);
   el.addEventListener('pointercancel',endTouch);
 });
+
+function updateLoopButton(){
+  const id=selectedId;
+  const btn=$('#loopBtn');
+  if(!btn)return;
+  const on=!!(id&&loopState.get(id));
+  btn.textContent=on?'LOOP ON':'LOOP OFF';
+  btn.classList.toggle('loopOn',on); btn.classList.toggle('loopOff',!on);
+}
+$('#loopBtn').onclick=async()=>{
+  if(!selectedId)return;
+  const id=selectedId, on=!loopState.get(id);
+  loopState.set(id,on);
+  const v=voices.get(id);
+  if(v) v.source.loop=on;
+  updateLoopButton();
+  $('#nowSub').textContent=on?'LOOP中 · ダブルタップでORIGINAL':'再生中 · ドラッグでTOUCH / ダブルタップでORIGINAL';
+};
 
 $('#stopAll').onclick=stopAll;
 
