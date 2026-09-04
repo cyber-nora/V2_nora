@@ -23,7 +23,7 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
 .camp{position:absolute;left:51%;top:49%;width:270px;height:170px;transform:translate(-50%,-50%);filter:drop-shadow(0 25px 30px rgba(0,0,0,.55))}.tent{position:absolute;left:18px;bottom:15px;width:150px;height:92px;background:linear-gradient(135deg,#b9a77d,#4b4433);clip-path:polygon(50% 0,100% 100%,0 100%)}.tent:after{content:"";position:absolute;left:57px;bottom:0;width:35px;height:50px;background:#171714;box-shadow:0 0 17px rgba(255,190,78,.25)}.tent2{position:absolute;right:12px;bottom:20px;width:108px;height:70px;background:linear-gradient(135deg,#8f8367,#35372e);clip-path:polygon(50% 0,100% 100%,0 100%)}.fire{position:absolute;left:116px;bottom:0;width:55px;height:72px;transform-origin:50% 100%;transition:transform .2s;filter:drop-shadow(0 0 18px rgba(255,99,22,.65))}.flame{position:absolute;left:8px;bottom:0;width:38px;height:61px;background:linear-gradient(#ffe66b,#ff9b20 45%,#e4381a);clip-path:polygon(50% 0,75% 28%,64% 25%,90% 55%,65% 100%,18% 100%,0 63%,28% 30%);animation:flame 1s ease-in-out infinite alternate}@keyframes flame{to{transform:scale(.86,.94) rotate(2deg)}}.lamp{position:absolute;right:6px;bottom:42px;width:13px;height:13px;border-radius:50%;background:#ffd878;box-shadow:0 0 22px 8px rgba(255,193,76,.35)}
 #rain{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .4s;background:repeating-linear-gradient(105deg,transparent 0 22px,rgba(165,210,230,.26) 23px,transparent 25px 42px);animation:rain .45s linear infinite}@keyframes rain{to{background-position:-30px 60px}}#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}.ripple{position:absolute;width:18px;height:18px;border:2px solid var(--accent);border-radius:50%;pointer-events:none;animation:ripple 1.5s ease-out forwards}@keyframes ripple{to{width:190px;height:190px;opacity:0;transform:translate(-86px,-86px)}}.steam{position:absolute;width:8px;height:55px;border-radius:50%;background:linear-gradient(90deg,transparent,rgba(240,240,230,.4),transparent);filter:blur(4px);animation:steam 2.4s infinite ease-out}@keyframes steam{to{transform:translateY(-80px) translateX(12px);opacity:0}}
 #status{position:fixed;z-index:500;left:50%;top:50%;transform:translate(-50%,-50%);max-width:min(440px,88vw);padding:16px 18px;background:rgba(5,10,8,.96);border:1px solid rgba(255,255,255,.16);border-radius:12px;font-size:10px;line-height:1.65;display:none;box-shadow:0 20px 60px #000}.show{display:block!important}.closeMsg{float:right;background:none;border:0;color:#aaa;font-size:16px}
-#voiceMemo{position:fixed;z-index:405;left:50%;bottom:18px;transform:translateX(-50%);width:min(360px,calc(100vw - 30px));padding:10px 12px;border-radius:13px}.vmTop{display:flex;justify-content:space-between;align-items:center}.vmTitle{font-size:7px;letter-spacing:.18em}.vmState{font-size:6px;color:#8e9993}.vmBtns{display:flex;gap:6px;margin-top:7px}.vmBtn{border:1px solid rgba(255,255,255,.14);background:#101714;color:#eee;border-radius:15px;padding:6px 10px;font-size:7px;letter-spacing:.1em}.vmBtn.recOn{border-color:#ff4b4b;color:#fff;box-shadow:0 0 14px rgba(255,40,40,.2)}.vmHint{font-size:6px;color:#68736d;margin-top:6px}.object.voiceObj .objCore{border-color:#ff9a3d}.object.voiceObj.playing .objCore{border-color:#7dffa5}.object.voiceObj{z-index:265}@media(max-width:760px){#voiceMemo{left:7px;right:7px;bottom:calc(43vh + 12px);transform:none;width:auto}header{left:10px;top:9px}.brand{font-size:18px}.tag{font-size:6px}#hud{right:7px;top:7px;width:220px;padding:8px}.wave{height:34px}#now{right:7px;top:132px;width:220px;padding:8px}#sampler{left:6px;right:6px;bottom:6px;width:auto;padding:8px}.sampleName{font-size:13px}.objCore{width:43px;height:43px;font-size:18px}.objLabel{font-size:5.3px}#spring{left:25%;top:18%}#onsen{left:50%;top:23%}#riverObj{left:10%;top:40%}#shrine{left:73%;top:27%}#swing{left:78%;top:41%}#campfire{left:43%;top:48%}#flameObj{left:59%;top:46%}#cooking{left:73%;top:52%}#sauna{left:25%;top:54%}#whole{left:48%;top:57%}.ground{height:61%}.river{width:33%;height:73%;top:17%}.camp{transform:translate(-50%,-50%) scale(.78);top:46%}#keys{height:45px}.btn{padding:5px 8px;font-size:6px}}
+#voiceMemo{position:fixed;z-index:405;left:50%;bottom:18px;transform:translateX(-50%);width:min(360px,calc(100vw - 30px));padding:10px 12px;border-radius:13px}.vmTop{display:flex;justify-content:space-between;align-items:center}.vmTitle{font-size:7px;letter-spacing:.18em}.vmState{font-size:6px;color:#8e9993}.vmBtns{display:flex;gap:6px;margin-top:7px}.vmBtn{border:1px solid rgba(255,255,255,.14);background:#101714;color:#eee;border-radius:15px;padding:6px 10px;font-size:7px;letter-spacing:.1em}.vmBtn.recOn{border-color:#ff4b4b;color:#fff;box-shadow:0 0 14px rgba(255,40,40,.2)}.vmHint{font-size:6px;color:#68736d;margin-top:6px}.object.voiceObj .objCore{border-color:#ff9a3d}.object.voiceObj.playing .objCore{border-color:#7dffa5}.object.voiceObj{z-index:265}@media(max-width:760px){/* voice memo is now a dock */header{left:10px;top:9px}.brand{font-size:18px}.tag{font-size:6px}#hud{right:7px;top:7px;width:220px;padding:8px}.wave{height:34px}#now{right:7px;top:132px;width:220px;padding:8px}#sampler{left:6px;right:6px;bottom:6px;width:auto;padding:8px}.sampleName{font-size:13px}.objCore{width:43px;height:43px;font-size:18px}.objLabel{font-size:5.3px}#spring{left:25%;top:18%}#onsen{left:50%;top:23%}#riverObj{left:10%;top:40%}#shrine{left:73%;top:27%}#swing{left:78%;top:41%}#campfire{left:43%;top:48%}#flameObj{left:59%;top:46%}#cooking{left:73%;top:52%}#sauna{left:25%;top:54%}#whole{left:48%;top:57%}.ground{height:61%}.river{width:33%;height:73%;top:17%}.camp{transform:translate(-50%,-50%) scale(.78);top:46%}#keys{height:45px}.btn{padding:5px 8px;font-size:6px}}
 @media(max-width:430px){#hud{width:205px}.brand{font-size:16px}.tag{font-size:5px}#now{width:205px;top:126px}.objCore{width:39px;height:39px;font-size:16px}#sampler{font-size:8px}.key{font-size:6px}}
 
 .nowActions{display:flex;gap:6px;margin-top:7px}.stop.loopOn{border-color:#72e69a;color:#fff;box-shadow:0 0 12px rgba(114,230,154,.2)}.stop.loopOff{color:#9aa59f}.object.kept{filter:brightness(1.15) drop-shadow(0 0 10px rgba(217,243,223,.22))}.object.kept .objCore{border-color:rgba(114,230,154,.72);box-shadow:0 0 0 4px rgba(114,230,154,.07),0 0 18px rgba(114,230,154,.12)}.keepMark{position:absolute;right:-2px;top:-3px;width:8px;height:8px;border-radius:50%;background:#72e69a;box-shadow:0 0 8px rgba(114,230,154,.65);display:none}.object.kept .keepMark{display:block}
@@ -45,6 +45,10 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
 @media(max-width:900px){#nora21{width:min(650px,calc(100vw - 380px));right:8px;bottom:8px}.n21mixer{grid-template-columns:repeat(5,1fr)}}
 @media(max-width:760px){#sampler{bottom:6px;max-height:43vh}#nora21{left:6px;right:6px;bottom:6px;width:auto}.n21panel{margin-top:6px}.n21body{max-height:48vh}.n21mixer{grid-template-columns:repeat(5,1fr)}.n21fader{height:62px}.n21touch{height:82px}.n21bar{justify-content:flex-end}.n21toggle{padding:8px 11px}}
 
+
+/* VOICE MEMO dock — kept away from the center field */
+.voiceDock{position:fixed;z-index:460;right:18px;bottom:18px;display:flex;flex-direction:column;align-items:flex-end;gap:7px}.voiceTab{border:1px solid rgba(255,255,255,.16);background:rgba(4,10,8,.9);color:#dfe9e2;border-radius:16px;padding:7px 12px;font-size:7px;letter-spacing:.16em;box-shadow:0 12px 35px rgba(0,0,0,.35)}.voicePlayer{display:none;width:275px;padding:11px 12px;border-radius:13px}.voiceDock.open .voicePlayer{display:block}.voicePlayerName{font-size:12px;letter-spacing:.08em;margin-top:5px;color:#e8efe9}.voicePlayer.ready .voicePlayerName{color:#9dffb8}.voicePlayer .vmBtns{display:flex;gap:6px;margin-top:7px}.voicePlayer .vmBtn{flex:1}.voicePlayer .vmHint{font-size:6px;color:#68736d;margin-top:7px;line-height:1.5}
+@media(max-width:760px){.voiceDock{right:7px;bottom:7px}.voicePlayer{width:min(255px,calc(100vw - 14px))}.voiceDock.open .voicePlayer{margin-bottom:0}.voiceTab{padding:8px 12px}}
 
 /* NORA TOUCH FIELD */
 #touchGuide{position:fixed;z-index:340;left:20px;bottom:18px;width:390px;padding:12px 14px;border-radius:13px;pointer-events:none;background:rgba(4,10,8,.78)}
@@ -88,7 +92,7 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
   <div class="tgSub">動かした距離に応じて軽いFXも加わります。中央へ戻すと完全バイパス。</div>
 </section>
 
-<section id="voiceMemo" class="panel"><div class="vmTop"><span class="vmTitle">VOICE MEMO / FIELD REC</span><span id="vmState" class="vmState">READY</span></div><div class="vmBtns"><button id="vmRec" class="vmBtn">● REC</button><button id="vmStop" class="vmBtn">■ STOP</button><button id="vmPlay" class="vmBtn">▶ PLAY</button></div><div class="vmHint">マイクで歌・声・楽器を録音。録音後は新しい音源としてFIELDに追加されます。</div></section>
+<section id="voiceDock" class="voiceDock"><button id="voiceToggle" class="voiceTab">VOICE</button><div id="voicePlayer" class="voicePlayer panel"><div class="vmTop"><span class="vmTitle">VOICE MEMO / FIELD REC</span><span id="vmState" class="vmState">READY</span></div><div id="voicePlayerName" class="voicePlayerName">NO RECORDING</div><div class="vmBtns"><button id="vmRec" class="vmBtn">● REC</button><button id="vmStop" class="vmBtn">■ STOP</button></div><div class="vmBtns"><button id="vmPlay" class="vmBtn">▶ PLAY</button><button id="vmLoop" class="vmBtn">LOOP OFF</button></div><div class="vmHint">マイクで声・歌・楽器を録音。録音後はここから再生できます。</div></div></section>
 <div id="touchReadout"></div><div id="status"></div>
 
 <script>
@@ -96,15 +100,18 @@ const DIR="sounds/";
 const files={spring:"01_spring.mp3",onsen:"02_onsen.mp3",river:"03_river.mp3",shrine:"04_shrine.mp3",swing:"05_swing.mp3",campfire:"06_campfire.mp3",flame:"07_flame.mp3",cooking:"08_cooking.mp3",sauna:"09_sauna.mp3",camp:"10_camp.mp3"};
 const labels={spring:"SPRING",onsen:"ONSEN",river:"RIVER",shrine:"SHRINE",swing:"SWING",campfire:"CAMPFIRE",flame:"FLAME",cooking:"COOKING",sauna:"SAUNA",camp:"CAMP"};
 const ids=Object.keys(files), $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-function labelOf(id){return labelOf(id)||customLabels.get(id)||id.toUpperCase()}
+function labelOf(id){return labels[id]||customLabels.get(id)||id.toUpperCase()}
 function fileOf(id){return files[id]||null}
 let ctx=null, master=null, analyser=null;
 const buffers=new Map(), voices=new Map(), states=new Map();
 const customBuffers=new Map(), customLabels=new Map();
-let mediaStream=null, mediaRecorder=null, mediaChunks=[], voiceReady=false;
+let mediaStream=null, mediaRecorder=null, mediaChunks=[], voiceReady=false, voiceRecTimer=null;
 const originalPos=new Map();
 const keptOffset=new Map();
+const touchParam=new Map();
+const TOUCH_RANGE=130;
 const loopState=new Map(ids.map(id=>[id,false]));
+loopState.set('voice',false);
 let activeDrag=null, dragMoved=false, touchReadoutTimer=null, clickTimer=null, lastTap=0, selectedId=null;
 
 function msg(t){$('#status').innerHTML='<button class="closeMsg" onclick="this.parentNode.classList.remove(\'show\')">×</button>'+t;$('#status').classList.add('show')}
@@ -225,7 +232,7 @@ async function play(id){
   source.onended=()=>{if(voices.get(id)===v){voices.delete(id);if(el)el.classList.remove('playing');updatePlayingState();}};
   source.start();
   updatePlayingState();
-  trigger(id);
+  if(id!=='voice') trigger(id);
 }
 
 function makeDriveCurve(amount){
@@ -243,6 +250,8 @@ function setOriginalPosition(el, resetAudio=true){
   const p=originalPos.get(el.id); if(!p)return;
   el.style.left=p.left; el.style.top=p.top; el.style.transform='';
   keptOffset.set(el.id,{x:0,y:0});
+  touchParam.set(el.id,{x:0,y:0});
+  touchParam.set(el.id,{x:0,y:0});
   el.classList.remove('kept');
   if(resetAudio){
     const id=el.dataset.id, v=voices.get(id);
@@ -254,7 +263,7 @@ function pointerPos(e){return {x:e.clientX,y:e.clientY};}
 function beginTouch(e,el){
   if(e.pointerType==='mouse' && e.button!==0)return;
   e.preventDefault(); e.stopPropagation();
-  const base=keptOffset.get(el.id)||{x:0,y:0};
+  const base=touchParam.get(el.id)||{x:0,y:0};
   activeDrag={el,id:el.dataset.id,startX:e.clientX,startY:e.clientY,lastX:e.clientX,lastY:e.clientY,pointerId:e.pointerId,baseX:base.x,baseY:base.y};
   dragMoved=false; el.setPointerCapture?.(e.pointerId); el.classList.add('touching');
 }
@@ -263,14 +272,18 @@ function moveTouch(e){
   const a=activeDrag,el=a.el;
   const dx=e.clientX-a.startX,dy=e.clientY-a.startY;
   if(Math.hypot(dx,dy)>5)dragMoved=true;
-  const totalX=a.baseX+dx, totalY=a.baseY+dy;
-  const nx=Math.max(0,Math.min(1,.5+totalX/130));
-  const ny=Math.max(0,Math.min(1,.5+totalY/130));
-  // The icon stays where the user leaves it. Position is persistent.
+  // Keep a fixed ±TOUCH_RANGE control range from the original position.
+  // The visual position and the audio parameter use the same normalized coordinates,
+  // so resetting never changes the available pitch/speed range.
+  const px=Math.max(-1,Math.min(1,a.baseX+dx/TOUCH_RANGE));
+  const py=Math.max(-1,Math.min(1,a.baseY+dy/TOUCH_RANGE));
+  const totalX=px*TOUCH_RANGE,totalY=py*TOUCH_RANGE;
   el.style.transform=`translate(${totalX}px,${totalY}px) scale(1.1)`;
+  touchParam.set(el.id,{x:px,y:py});
   const v=voices.get(a.id);
+  const nx=(px+1)/2, ny=(py+1)/2;
   if(v){const r=applyVoiceTouch(v,nx,ny);setReadout(a.id,r.pitch,r.effect,r.speed);}
-  else setReadout(a.id,Math.round((.5-ny)*24),effectForTouch(nx,ny).name,Math.pow(2,(nx-.5)*2));
+  else setReadout(a.id,Math.round(-py*24),effectForTouch(nx,ny).name,Math.pow(2,px*2));
 }
 function resetToOriginal(el){
   const id=el.dataset.id;
@@ -291,16 +304,11 @@ function endTouch(e){
   try{el.releasePointerCapture?.(a.pointerId)}catch(err){}
   activeDrag=null;
   if(dragMoved){
-    // Keep the moved position. Do not snap back.
     el.classList.add('kept');
     selectedId=id;
-    const dx=e.clientX-a.startX,dy=e.clientY-a.startY;
-    const totalX=a.baseX+dx,totalY=a.baseY+dy;
-    keptOffset.set(id,{x:totalX,y:totalY});
-    const nx=Math.max(0,Math.min(1,.5+totalX/130)), ny=Math.max(0,Math.min(1,.5+totalY/130));
-    el.style.transform=`translate(${totalX}px,${totalY}px)`;
-    const v=voices.get(id);
-    if(v) applyVoiceTouch(v,nx,ny);
+    const p=touchParam.get(id)||{x:0,y:0};
+    keptOffset.set(id,{x:p.x*TOUCH_RANGE,y:p.y*TOUCH_RANGE});
+    el.style.transform=`translate(${p.x*TOUCH_RANGE}px,${p.y*TOUCH_RANGE}px)`;
     updatePlayingState();
     return;
   }
@@ -361,23 +369,22 @@ async function startVoiceRecording(){
       try{
         const arr=await blob.arrayBuffer(); const b=await ctx.decodeAudioData(arr);
         const id='voice'; customBuffers.set(id,b); customLabels.set(id,'VOICE MEMO'); voiceReady=true;
-        let el=document.querySelector('[data-id="voice"]');
-        if(!el){
-          el=document.createElement('div'); el.className='object voiceObj'; el.id='voiceObj'; el.dataset.id=id; el.style.left='48%'; el.style.top='82%';
-          el.innerHTML='<div class="objCore">●</div><div class="objLabel">VOICE MEMO</div>'; $('#scene').appendChild(el);
-          originalPos.set(el.id,{left:'48%',top:'82%'}); keptOffset.set(el.id,{x:0,y:0});
-          const mark=document.createElement('span');mark.className='keepMark';el.appendChild(mark); bindObject(el);
-        }
-        selectedId=id; $('#vmState').textContent='RECORDED'; msg('録音した音をVOICE MEMOとしてFIELDに追加しました。アイコンをタップして再生できます。');
+        selectedId=id; $('#vmState').textContent='RECORDED';
+        $('#voicePlayer').classList.add('ready');
+        $('#voicePlayerName').textContent='VOICE MEMO';
+        msg('録音した音をVOICE MEMO PLAYERにセットしました。FIELDの音と重ねて再生できます。');
         updatePlayingState();
       }catch(err){console.error(err);msg('録音データを音源として読み込めませんでした。');}
     };
-    mediaRecorder.start(); $('#vmState').textContent='RECORDING'; $('#vmRec').classList.add('recOn');
+    mediaRecorder.start(1000); $('#vmState').textContent='RECORDING'; $('#vmRec').classList.add('recOn'); clearTimeout(voiceRecTimer); voiceRecTimer=setTimeout(stopVoiceRecording,20000);
   }catch(err){console.error(err);msg('マイクへのアクセスが許可されませんでした。HTTPSのページでマイクを許可してください。');}
 }
-function stopVoiceRecording(){if(mediaRecorder&&mediaRecorder.state==='recording'){mediaRecorder.stop();$('#vmState').textContent='PROCESSING';$('#vmRec').classList.remove('recOn');}}
+function stopVoiceRecording(){clearTimeout(voiceRecTimer); voiceRecTimer=null; if(mediaRecorder&&mediaRecorder.state==='recording'){mediaRecorder.stop();$('#vmState').textContent='PROCESSING';$('#vmRec').classList.remove('recOn');}}
 async function playVoiceMemo(){if(voiceReady){selectedId='voice';play('voice')}}
 $('#vmRec').onclick=startVoiceRecording; $('#vmStop').onclick=stopVoiceRecording; $('#vmPlay').onclick=playVoiceMemo;
+
+$('#voiceToggle').onclick=()=>$('#voiceDock').classList.toggle('open');
+$('#vmLoop').onclick=()=>{if(!voiceReady)return; const on=!loopState.get('voice'); loopState.set('voice',on); const v=voices.get('voice'); if(v)v.source.loop=on; $('#vmLoop').textContent=on?'LOOP ON':'LOOP OFF';};
 
 function bindObject(el){
   el.addEventListener('pointerdown',e=>beginTouch(e,el));
