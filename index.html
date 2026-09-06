@@ -88,7 +88,7 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
   <div class="tgTitle">NORA TOUCH FIELD V6</div>
   <div class="tgSub">タップ → PLAY / STOP　｜　ドラッグ → 音を変えてその位置にKEEP　｜　ダブルタップ → ORIGINAL</div>
   <div class="tgAxis"><span>← SLOW</span><b>ORIGINAL</b><span>FAST →</span></div>
-  <div class="tgAxis"><span>↓ LOW PITCH</span><span>↑ HIGH PITCH</span></div>
+  <div class="tgAxis"><span>↓ VOLUME DOWN</span><span>↑ VOLUME UP</span></div>
   <div class="tgSub">動かした距離に応じて軽いFXも加わります。中央へ戻すと完全バイパス。</div>
 </section>
 
@@ -158,7 +158,7 @@ function stopVoice(id){
   const v=voices.get(id); if(!v)return;
   try{v.source.onended=null;v.source.stop()}catch(e){}
   try{v.source.disconnect()}catch(e){}
-  [v.input,v.filter,v.drive,v.delay,v.feedback,v.delayGain,v.gain].forEach(n=>{try{n&&n.disconnect()}catch(e){}});
+  [v.input,v.filter,v.drive,v.delay,v.feedback,v.space,v.gain].forEach(n=>{try{n&&n.disconnect()}catch(e){}});
   voices.delete(id);
   const el=document.querySelector('[data-id="'+id+'"]');
   if(el)el.classList.remove('playing','active');
@@ -195,28 +195,21 @@ function effectForTouch(nx,ny){
 
 function applyVoiceTouch(v,nx,ny){
   // V6: Y = volume, X = speed. Center is the original/bypass state.
-  // Center is the true original state: volume=1.0, speed=1.0.
-  // Use a piecewise mapping so the left/right extremes can stay asymmetric while
-  // the center never shifts the pitch.
-  const volume = ny <= .5
-    ? 1 + (VOLUME_MAX-1) * (1-ny)/.5
-    : 1 - (1-VOLUME_MIN) * (ny-.5)/.5;
-  const speed = nx <= .5
-    ? SPEED_MIN + (1-SPEED_MIN) * (nx/.5)
-    : 1 + (SPEED_MAX-1) * ((nx-.5)/.5);
+  const volume=VOLUME_MIN + (1-ny)*(VOLUME_MAX-VOLUME_MIN);
+  const speed=SPEED_MIN + nx*(SPEED_MAX-SPEED_MIN);
   v.source.playbackRate.setTargetAtTime(speed,ctx.currentTime,.018);
   v.gain.gain.setTargetAtTime(volume,ctx.currentTime,.018);
   const ef=effectForTouch(nx,ny);
   if(ef.mode==='dry'){
     v.filter.frequency.setTargetAtTime(22000,ctx.currentTime,.03); v.filter.Q.value=.7;
-    v.drive.gain.value=0; v.delayGain.gain.value=0;
+    v.drive.gain.value=0; v.space.gain.value=0; v.delayGain.gain.value=0;
   }else if(ef.mode==='filter'){
     const f=22000-(ef.amount*19000);
     v.filter.frequency.setTargetAtTime(Math.max(700,f),ctx.currentTime,.03); v.filter.Q.value=1+ef.amount*5;
-    v.drive.gain.value=ef.amount*.10; v.delayGain.gain.value=ef.amount*.04;
+    v.drive.gain.value=ef.amount*.10; v.space.gain.value=0; v.delayGain.gain.value=ef.amount*.04;
   }else{
     v.filter.frequency.setTargetAtTime(22000-ef.amount*4500,ctx.currentTime,.03); v.filter.Q.value=1;
-    v.drive.gain.value=0; v.delayGain.gain.value=ef.amount*.10;
+    v.drive.gain.value=0; v.space.gain.value=ef.amount*.10; v.delayGain.gain.value=ef.amount*.05;
   }
   return {volume,speed,effect:ef.name};
 }
@@ -226,7 +219,7 @@ async function play(id){
   await ready();
   if(voices.has(id)){stopVoice(id);return;}
   const b=await load(id); if(!b)return;
-  const source=ctx.createBufferSource(); source.buffer=b; source.loop=!!loopState.get(id); source.playbackRate.value=1;
+  const source=ctx.createBufferSource(); source.buffer=b; source.loop=!!loopState.get(id); source.playbackRate.value=1; source.detune.value=0;
   const input=ctx.createGain(); input.gain.value=1;
   const filter=ctx.createBiquadFilter(); filter.type='lowpass'; filter.frequency.value=22000; filter.Q.value=.7;
   // Lightweight per-voice FX: no ConvolverNode/impulse generation on every play.
@@ -239,12 +232,17 @@ async function play(id){
   filter.connect(delay); delay.connect(delayGain); delayGain.connect(master); delay.connect(feedback); feedback.connect(delay);
   // Drive is intentionally a simple gain texture here; saturation is avoided for low-end devices.
   filter.connect(drive); drive.connect(master);
-  const v={source,input,filter,drive,delay,delayGain,feedback,gain};
+  const v={source,input,filter,drive,delay,delayGain,feedback,space:null,gain};
   voices.set(id,v);
   const el=document.querySelector('[data-id="'+id+'"]'); if(el)el.classList.add('playing');
   source.onended=()=>{if(voices.get(id)===v){voices.delete(id);if(el)el.classList.remove('playing');if(id==='voice')$('#vmPlay').classList.remove('active');updatePlayingState();}};
-  const tp=touchParam.get(id)||{x:0,y:0};
+  const tp=(id==='voice')?{x:0,y:0}:(touchParam.get(id)||{x:0,y:0});
   applyVoiceTouch(v,(tp.x+1)/2,(tp.y+1)/2);
+  if(id==='voice'){
+    source.playbackRate.setValueAtTime(1,ctx.currentTime);
+    source.detune.setValueAtTime(0,ctx.currentTime);
+    v.gain.gain.setValueAtTime(1,ctx.currentTime);
+  }
   source.start();
   if(id==='voice'){$('#vmState').textContent='PLAYING';$('#vmPlay').classList.add('active');}
   updatePlayingState();
@@ -272,7 +270,7 @@ function setOriginalPosition(el, resetAudio=true){
     const id=el.dataset.id, v=voices.get(id);
     if(v){
       applyVoiceTouch(v,.5,.5);
-      setReadout(id,1,1,'ORIGINAL / BYPASS');
+      setReadout(id,.765,1,'ORIGINAL / BYPASS');
     }
   }
 }
@@ -297,11 +295,7 @@ function moveTouch(e){
   const v=voices.get(a.id);
   const nx=(px+1)/2, ny=(py+1)/2;
   if(v){const r=applyVoiceTouch(v,nx,ny);setReadout(a.id,r.volume,r.speed,r.effect);}
-  else {
-    const rv = ny <= .5 ? 1 + (VOLUME_MAX-1)*(1-ny)/.5 : 1 - (1-VOLUME_MIN)*(ny-.5)/.5;
-    const rs = nx <= .5 ? SPEED_MIN + (1-SPEED_MIN)*(nx/.5) : 1 + (SPEED_MAX-1)*((nx-.5)/.5);
-    setReadout(a.id,rv,rs,effectForTouch(nx,ny).name);
-  }
+  else setReadout(a.id,VOLUME_MIN+(1-ny)*(VOLUME_MAX-VOLUME_MIN),SPEED_MIN+nx*(SPEED_MAX-SPEED_MIN),effectForTouch(nx,ny).name);
 }
 
 function resetToOriginal(el){
@@ -309,7 +303,7 @@ function resetToOriginal(el){
   setOriginalPosition(el,true);
   const v=voices.get(id);
   if(v) applyVoiceTouch(v,.5,.5);
-  setReadout(id,1,1,'ORIGINAL / BYPASS');
+  setReadout(id,.765,1,'ORIGINAL / BYPASS');
   selectedId=id;
   updatePlayingState();
 }
@@ -390,12 +384,14 @@ async function startVoiceRecording(){
       try{
         const arr=await blob.arrayBuffer();
         const decoded=await ctx.decodeAudioData(arr);
-        // Keep voice memos lightweight: downmix to mono and resample to 22.05 kHz.
-        const targetRate=22050;
-        const targetLength=Math.max(1,Math.ceil(decoded.duration*targetRate));
+        // Voice memo: downmix to mono, but keep the original sample rate.
+        // This avoids any unnecessary sample-rate conversion that can make a recorded memo sound wrong on some browsers.
+        const targetRate=decoded.sampleRate;
+        const targetLength=Math.max(1,decoded.length);
         const offline=new OfflineAudioContext(1,targetLength,targetRate);
         const src=offline.createBufferSource(); src.buffer=decoded; src.connect(offline.destination); src.start();
         const b=await offline.startRendering();
+        touchParam.set('voice',{x:0,y:0});
         const id='voice'; customBuffers.set(id,b); customLabels.set(id,'VOICE MEMO'); voiceReady=true;
         selectedId=id; $('#vmState').textContent='RECORDED';
         $('#voicePlayer').classList.add('ready');
