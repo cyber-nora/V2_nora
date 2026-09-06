@@ -50,11 +50,11 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
 .voiceDock{position:fixed;z-index:460;right:18px;bottom:18px;display:flex;flex-direction:column;align-items:flex-end;gap:7px}.voiceTab{border:1px solid rgba(255,255,255,.16);background:rgba(4,10,8,.9);color:#dfe9e2;border-radius:16px;padding:7px 12px;font-size:7px;letter-spacing:.16em;box-shadow:0 12px 35px rgba(0,0,0,.35)}.voicePlayer{display:none;width:275px;padding:11px 12px;border-radius:13px}.voiceDock.open .voicePlayer{display:block}.voicePlayerName{font-size:12px;letter-spacing:.08em;margin-top:5px;color:#e8efe9}.voicePlayer.ready .voicePlayerName{color:#9dffb8}.voicePlayer .vmBtns{display:flex;gap:6px;margin-top:7px}.voicePlayer .vmBtn{flex:1}.voicePlayer .vmHint{font-size:6px;color:#68736d;margin-top:7px;line-height:1.5}
 @media(max-width:760px){.voiceDock{right:7px;bottom:7px}.voicePlayer{width:min(255px,calc(100vw - 14px))}.voiceDock.open .voicePlayer{margin-bottom:0}.voiceTab{padding:8px 12px}}
 
-/* NORA TOUCH FIELD */
+/* NORA TOUCH FIELD V6 */
 #touchGuide{position:fixed;z-index:340;left:20px;bottom:18px;width:390px;padding:12px 14px;border-radius:13px;pointer-events:none;background:rgba(4,10,8,.78)}
 .tgTitle{font-size:8px;letter-spacing:.2em;color:#dce9df}.tgSub{font-size:7px;line-height:1.55;color:#8f9c95;margin-top:5px}.tgAxis{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:7px;color:#66746c;font-size:6px;letter-spacing:.06em}.tgAxis b{color:#d9f3df;font-weight:500}
 .object.touching{transition:none;z-index:260;filter:brightness(1.45) drop-shadow(0 0 24px rgba(120,255,160,.7))}.object:not(.playing) .objCore{border-color:#ff4b4b;box-shadow:0 0 0 4px rgba(255,55,55,.08),0 0 15px rgba(255,55,55,.12)}.object.playing .objCore{border-color:#7dffa5;box-shadow:0 0 0 4px rgba(90,240,130,.08),0 0 22px rgba(70,240,120,.35)}
-#touchReadout{position:fixed;z-index:450;left:50%;top:72%;transform:translate(-50%,-50%);padding:7px 11px;border:1px solid rgba(120,255,160,.24);border-radius:12px;background:rgba(3,10,7,.72);font-size:7px;letter-spacing:.12em;color:#a8b7ae;opacity:0;transition:opacity .15s;pointer-events:none;backdrop-filter:blur(8px)}#touchReadout.show{opacity:1}.readoutMain{color:#e7f4ea;font-size:9px}
+#touchReadout{position:fixed;z-index:450;left:50%;top:72%;transform:translate(-50%,-50%);padding:7px 11px;border:1px solid rgba(120,255,160,.24);border-radius:12px;background:rgba(3,10,7,.72);font-size:7px;letter-spacing:.12em;color:#a8b7ae;opacity:0;transition:opacity .15s;pointer-events:none;backdrop-filter:none}#touchReadout.show{opacity:1}.readoutMain{color:#e7f4ea;font-size:9px}
 @media(max-width:760px){#touchGuide{left:7px;right:7px;bottom:7px;width:auto;padding:9px 10px}.tgSub{font-size:6px}.tgAxis{font-size:5.5px}.objCore{touch-action:none}#touchReadout{top:70%}}
 </style>
 </head>
@@ -85,7 +85,7 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
 </section>
 <section id="now" class="panel"><div class="nowTitle">NOW SAMPLING</div><div id="nowName" class="nowName">—</div><div id="nowSub" class="nowSub">サウンドポイントを選択してください。</div><div class="nowActions"><button id="stopAll" class="stop">STOP</button><button id="loopBtn" class="stop loopOff">LOOP OFF</button></div><div class="nowActions"><button id="allReset" class="stop">ALL RESET</button><button id="allStop" class="stop">ALL STOP</button><button id="allPlay" class="stop">ALL PLAY</button></div></section>
 <section id="touchGuide" class="panel">
-  <div class="tgTitle">NORA TOUCH FIELD</div>
+  <div class="tgTitle">NORA TOUCH FIELD V6</div>
   <div class="tgSub">タップ → PLAY / STOP　｜　ドラッグ → 音を変えてその位置にKEEP　｜　ダブルタップ → ORIGINAL</div>
   <div class="tgAxis"><span>← SLOW</span><b>ORIGINAL</b><span>FAST →</span></div>
   <div class="tgAxis"><span>↓ LOW PITCH</span><span>↑ HIGH PITCH</span></div>
@@ -110,6 +110,8 @@ const originalPos=new Map();
 const keptOffset=new Map();
 const touchParam=new Map();
 const TOUCH_RANGE=130;
+const VOLUME_MIN=0.08, VOLUME_MAX=1.45;
+const SPEED_MIN=0.55, SPEED_MAX=1.8;
 const loopState=new Map(ids.map(id=>[id,false]));
 loopState.set('voice',false);
 let activeDrag=null, dragMoved=false, touchReadoutTimer=null, clickTimer=null, lastTap=0, selectedId=null;
@@ -142,11 +144,11 @@ async function load(id){
   }
 }
 
-function setReadout(id,pitch,effect,speed=1){
+function setReadout(id,volume,speed,effect){
   const el=$('#touchReadout');
-  const p=(pitch>0?'+':'')+pitch+' st';
+  const vol=Math.round(volume*100);
   const sp=(speed>1.02?'FAST '+Math.round(speed*100)+'%':speed<.98?'SLOW '+Math.round(speed*100)+'%':'100%');
-  el.innerHTML='<span class="readoutMain">'+labelOf(id)+'</span><br>'+p+'　·　'+sp+'　·　'+effect;
+  el.innerHTML='<span class="readoutMain">'+labelOf(id)+'</span><br>VOLUME '+vol+'%　·　'+sp+'　·　'+effect;
   el.classList.add('show');
   clearTimeout(touchReadoutTimer);
   touchReadoutTimer=setTimeout(()=>el.classList.remove('show'),350);
@@ -176,37 +178,40 @@ function updatePlayingState(){
   const current=selectedId&&voices.has(selectedId)?selectedId:(p?[...voices.keys()].at(-1):selectedId);
   if(current){
     $('#nowName').textContent=labelOf(current)||'FIELD';
-    $('#nowSub').textContent=voices.has(current)?'再生中 · タップでSTOP / ドラッグでTOUCH':'停止中 · ダブルタップでORIGINAL';
+    $('#nowSub').textContent=voices.has(current)?'再生中 · ドラッグでVOLUME / SPEED / ダブルタップでORIGINAL':'停止中 · ダブルタップでORIGINAL';
   }else{$('#nowName').textContent='—';$('#nowSub').textContent='サウンドポイントを選択してください。';}
   updateLoopButton();
   if(!voices.has('voice')) $('#vmPlay').classList.remove('active');
 }
 
 function effectForTouch(nx,ny){
-  const dx=nx-.5, dy=ny-.5;
-  const amount=Math.min(1,Math.hypot(dx,dy)/.5);
+  // V6: vertical movement is volume only. FX follows the horizontal axis so the two controls stay intuitive.
+  const dx=nx-.5;
+  const amount=Math.min(1,Math.abs(dx)/.5);
   if(amount<.08) return {name:'ORIGINAL / BYPASS',mode:'dry',amount:0};
   if(dx<0) return {name:'SPACE / ECHO',mode:'space',amount};
   return {name:'FILTER / DRIVE',mode:'filter',amount};
 }
+
 function applyVoiceTouch(v,nx,ny){
-  const pitch=Math.round((.5-ny)*24);
-  // X is speed. Keep the center at 1.0 and use a moderate, fixed range.
-  const speed=Math.pow(2,(nx-.5)*1.5);
+  // V6: Y = volume, X = speed. Center is the original/bypass state.
+  const volume=VOLUME_MIN + (1-ny)*(VOLUME_MAX-VOLUME_MIN);
+  const speed=SPEED_MIN + nx*(SPEED_MAX-SPEED_MIN);
   v.source.playbackRate.setTargetAtTime(speed,ctx.currentTime,.018);
+  v.gain.gain.setTargetAtTime(volume,ctx.currentTime,.018);
   const ef=effectForTouch(nx,ny);
   if(ef.mode==='dry'){
     v.filter.frequency.setTargetAtTime(22000,ctx.currentTime,.03); v.filter.Q.value=.7;
-    v.drive.gain.value=0; v.space.gain.value=0; v.delay.gain.value=0;
+    v.drive.gain.value=0; v.space.gain.value=0; v.delayGain.gain.value=0;
   }else if(ef.mode==='filter'){
     const f=22000-(ef.amount*19000);
     v.filter.frequency.setTargetAtTime(Math.max(700,f),ctx.currentTime,.03); v.filter.Q.value=1+ef.amount*5;
-    v.drive.gain.value=ef.amount*.16; v.space.gain.value=0; v.delay.gain.value=ef.amount*.06;
+    v.drive.gain.value=ef.amount*.10; v.space.gain.value=0; v.delayGain.gain.value=ef.amount*.04;
   }else{
     v.filter.frequency.setTargetAtTime(22000-ef.amount*4500,ctx.currentTime,.03); v.filter.Q.value=1;
-    v.drive.gain.value=0; v.space.gain.value=ef.amount*.16; v.delay.gain.value=ef.amount*.09;
+    v.drive.gain.value=0; v.space.gain.value=ef.amount*.10; v.delayGain.gain.value=ef.amount*.05;
   }
-  return {pitch,speed,effect:ef.name};
+  return {volume,speed,effect:ef.name};
 }
 
 async function play(id){
@@ -227,10 +232,12 @@ async function play(id){
   filter.connect(delay); delay.connect(delayGain); delayGain.connect(master); delay.connect(feedback); feedback.connect(delay);
   // Drive is intentionally a simple gain texture here; saturation is avoided for low-end devices.
   filter.connect(drive); drive.connect(master);
-  const v={source,input,filter,drive,delay,feedback,space:null,gain};
+  const v={source,input,filter,drive,delay,delayGain,feedback,space:null,gain};
   voices.set(id,v);
   const el=document.querySelector('[data-id="'+id+'"]'); if(el)el.classList.add('playing');
   source.onended=()=>{if(voices.get(id)===v){voices.delete(id);if(el)el.classList.remove('playing');if(id==='voice')$('#vmPlay').classList.remove('active');updatePlayingState();}};
+  const tp=touchParam.get(id)||{x:0,y:0};
+  applyVoiceTouch(v,(tp.x+1)/2,(tp.y+1)/2);
   source.start();
   if(id==='voice'){$('#vmState').textContent='PLAYING';$('#vmPlay').classList.add('active');}
   updatePlayingState();
@@ -253,14 +260,16 @@ function setOriginalPosition(el, resetAudio=true){
   el.style.left=p.left; el.style.top=p.top; el.style.transform='';
   keptOffset.set(el.id,{x:0,y:0});
   touchParam.set(el.id,{x:0,y:0});
-  touchParam.set(el.id,{x:0,y:0});
   el.classList.remove('kept');
   if(resetAudio){
     const id=el.dataset.id, v=voices.get(id);
-    if(v) applyVoiceTouch(v,.5,.5);
-    setReadout(id,0,'ORIGINAL / BYPASS',1);
+    if(v){
+      applyVoiceTouch(v,.5,.5);
+      setReadout(id,.765,1,'ORIGINAL / BYPASS');
+    }
   }
 }
+
 function pointerPos(e){return {x:e.clientX,y:e.clientY};}
 function beginTouch(e,el){
   if(e.pointerType==='mouse' && e.button!==0)return;
@@ -274,24 +283,22 @@ function moveTouch(e){
   const a=activeDrag,el=a.el;
   const dx=e.clientX-a.startX,dy=e.clientY-a.startY;
   if(Math.hypot(dx,dy)>5)dragMoved=true;
-  // Keep a fixed ±TOUCH_RANGE control range from the original position.
-  // The visual position and the audio parameter use the same normalized coordinates,
-  // so resetting never changes the available pitch/speed range.
   const px=Math.max(-1,Math.min(1,a.baseX+dx/TOUCH_RANGE));
   const py=Math.max(-1,Math.min(1,a.baseY+dy/TOUCH_RANGE));
-  const totalX=px*TOUCH_RANGE,totalY=py*TOUCH_RANGE;
-  el.style.transform=`translate(${totalX}px,${totalY}px) scale(1.1)`;
+  el.style.transform=`translate(${px*TOUCH_RANGE}px,${py*TOUCH_RANGE}px) scale(1.1)`;
   touchParam.set(el.id,{x:px,y:py});
   const v=voices.get(a.id);
   const nx=(px+1)/2, ny=(py+1)/2;
-  if(v){const r=applyVoiceTouch(v,nx,ny);setReadout(a.id,r.pitch,r.effect,r.speed);}
-  else setReadout(a.id,Math.round(-py*24),effectForTouch(nx,ny).name,Math.pow(2,px*2));
+  if(v){const r=applyVoiceTouch(v,nx,ny);setReadout(a.id,r.volume,r.speed,r.effect);}
+  else setReadout(a.id,VOLUME_MIN+(1-ny)*(VOLUME_MAX-VOLUME_MIN),SPEED_MIN+nx*(SPEED_MAX-SPEED_MIN),effectForTouch(nx,ny).name);
 }
+
 function resetToOriginal(el){
   const id=el.dataset.id;
   setOriginalPosition(el,true);
   const v=voices.get(id);
   if(v) applyVoiceTouch(v,.5,.5);
+  setReadout(id,.765,1,'ORIGINAL / BYPASS');
   selectedId=id;
   updatePlayingState();
 }
@@ -347,7 +354,7 @@ $('#loopBtn').onclick=async()=>{
   const v=voices.get(id);
   if(v) v.source.loop=on;
   updateLoopButton();
-  $('#nowSub').textContent=on?'LOOP中 · ダブルタップでORIGINAL':'再生中 · ドラッグでTOUCH / ダブルタップでORIGINAL';
+  $('#nowSub').textContent=on?'LOOP中 · ダブルタップでORIGINAL':'再生中 · ドラッグでVOLUME / SPEED / ダブルタップでORIGINAL';
 };
 
 $('#stopAll').onclick=()=>{if(selectedId)stopVoice(selectedId);};
@@ -408,7 +415,7 @@ function trigger(id){
   if(id==='river'||id==='spring')for(let i=0;i<4;i++)setTimeout(()=>ripple(el),i*170);
   if(id==='onsen'||id==='sauna')for(let i=0;i<5;i++)setTimeout(()=>steam(el),i*150);
   if(id==='campfire'||id==='flame'){const f=$('.fire');f.style.transform='scale(1.5)';setTimeout(()=>f.style.transform='',650)}
-  if(id==='swing')el.animate([{transform:'rotate(0)'},{transform:'rotate(8deg)'},{transform:'rotate(-7deg)'},{transform:'rotate(0)'}],900);
+  if(id==='swing'){ const core=el.querySelector('.objCore'); core.animate([{transform:'rotate(0)'},{transform:'rotate(8deg)'},{transform:'rotate(-7deg)'},{transform:'rotate(0)'}],900); }
   if(id==='shrine')$('#flash').animate([{opacity:0},{opacity:.4},{opacity:0}],220);
 }
 function ripple(el){const r=document.createElement('div');r.className='ripple';r.style.left=(el.offsetLeft+27)+'px';r.style.top=(el.offsetTop+27)+'px';$('#scene').appendChild(r);setTimeout(()=>r.remove(),1500)}
