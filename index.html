@@ -158,7 +158,7 @@ function stopVoice(id){
   const v=voices.get(id); if(!v)return;
   try{v.source.onended=null;v.source.stop()}catch(e){}
   try{v.source.disconnect()}catch(e){}
-  [v.input,v.filter,v.drive,v.delay,v.feedback,v.space,v.gain].forEach(n=>{try{n&&n.disconnect()}catch(e){}});
+  [v.input,v.filter,v.drive,v.delay,v.feedback,v.delayGain,v.gain].forEach(n=>{try{n&&n.disconnect()}catch(e){}});
   voices.delete(id);
   const el=document.querySelector('[data-id="'+id+'"]');
   if(el)el.classList.remove('playing','active');
@@ -202,14 +202,14 @@ function applyVoiceTouch(v,nx,ny){
   const ef=effectForTouch(nx,ny);
   if(ef.mode==='dry'){
     v.filter.frequency.setTargetAtTime(22000,ctx.currentTime,.03); v.filter.Q.value=.7;
-    v.drive.gain.value=0; v.space.gain.value=0; v.delayGain.gain.value=0;
+    v.drive.gain.value=0; v.delayGain.gain.value=0;
   }else if(ef.mode==='filter'){
     const f=22000-(ef.amount*19000);
     v.filter.frequency.setTargetAtTime(Math.max(700,f),ctx.currentTime,.03); v.filter.Q.value=1+ef.amount*5;
-    v.drive.gain.value=ef.amount*.10; v.space.gain.value=0; v.delayGain.gain.value=ef.amount*.04;
+    v.drive.gain.value=ef.amount*.10; v.delayGain.gain.value=ef.amount*.04;
   }else{
     v.filter.frequency.setTargetAtTime(22000-ef.amount*4500,ctx.currentTime,.03); v.filter.Q.value=1;
-    v.drive.gain.value=0; v.space.gain.value=ef.amount*.10; v.delayGain.gain.value=ef.amount*.05;
+    v.drive.gain.value=0; v.delayGain.gain.value=ef.amount*.10;
   }
   return {volume,speed,effect:ef.name};
 }
@@ -232,7 +232,7 @@ async function play(id){
   filter.connect(delay); delay.connect(delayGain); delayGain.connect(master); delay.connect(feedback); feedback.connect(delay);
   // Drive is intentionally a simple gain texture here; saturation is avoided for low-end devices.
   filter.connect(drive); drive.connect(master);
-  const v={source,input,filter,drive,delay,delayGain,feedback,space:null,gain};
+  const v={source,input,filter,drive,delay,delayGain,feedback,gain};
   voices.set(id,v);
   const el=document.querySelector('[data-id="'+id+'"]'); if(el)el.classList.add('playing');
   source.onended=()=>{if(voices.get(id)===v){voices.delete(id);if(el)el.classList.remove('playing');if(id==='voice')$('#vmPlay').classList.remove('active');updatePlayingState();}};
