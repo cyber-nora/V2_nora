@@ -195,8 +195,15 @@ function effectForTouch(nx,ny){
 
 function applyVoiceTouch(v,nx,ny){
   // V6: Y = volume, X = speed. Center is the original/bypass state.
-  const volume=VOLUME_MIN + (1-ny)*(VOLUME_MAX-VOLUME_MIN);
-  const speed=SPEED_MIN + nx*(SPEED_MAX-SPEED_MIN);
+  // Center is the true original state: volume=1.0, speed=1.0.
+  // Use a piecewise mapping so the left/right extremes can stay asymmetric while
+  // the center never shifts the pitch.
+  const volume = ny <= .5
+    ? 1 + (VOLUME_MAX-1) * (1-ny)/.5
+    : 1 - (1-VOLUME_MIN) * (ny-.5)/.5;
+  const speed = nx <= .5
+    ? SPEED_MIN + (1-SPEED_MIN) * (nx/.5)
+    : 1 + (SPEED_MAX-1) * ((nx-.5)/.5);
   v.source.playbackRate.setTargetAtTime(speed,ctx.currentTime,.018);
   v.gain.gain.setTargetAtTime(volume,ctx.currentTime,.018);
   const ef=effectForTouch(nx,ny);
@@ -265,7 +272,7 @@ function setOriginalPosition(el, resetAudio=true){
     const id=el.dataset.id, v=voices.get(id);
     if(v){
       applyVoiceTouch(v,.5,.5);
-      setReadout(id,.765,1,'ORIGINAL / BYPASS');
+      setReadout(id,1,1,'ORIGINAL / BYPASS');
     }
   }
 }
@@ -290,7 +297,11 @@ function moveTouch(e){
   const v=voices.get(a.id);
   const nx=(px+1)/2, ny=(py+1)/2;
   if(v){const r=applyVoiceTouch(v,nx,ny);setReadout(a.id,r.volume,r.speed,r.effect);}
-  else setReadout(a.id,VOLUME_MIN+(1-ny)*(VOLUME_MAX-VOLUME_MIN),SPEED_MIN+nx*(SPEED_MAX-SPEED_MIN),effectForTouch(nx,ny).name);
+  else {
+    const rv = ny <= .5 ? 1 + (VOLUME_MAX-1)*(1-ny)/.5 : 1 - (1-VOLUME_MIN)*(ny-.5)/.5;
+    const rs = nx <= .5 ? SPEED_MIN + (1-SPEED_MIN)*(nx/.5) : 1 + (SPEED_MAX-1)*((nx-.5)/.5);
+    setReadout(a.id,rv,rs,effectForTouch(nx,ny).name);
+  }
 }
 
 function resetToOriginal(el){
@@ -298,7 +309,7 @@ function resetToOriginal(el){
   setOriginalPosition(el,true);
   const v=voices.get(id);
   if(v) applyVoiceTouch(v,.5,.5);
-  setReadout(id,.765,1,'ORIGINAL / BYPASS');
+  setReadout(id,1,1,'ORIGINAL / BYPASS');
   selectedId=id;
   updatePlayingState();
 }
