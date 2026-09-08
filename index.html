@@ -88,7 +88,7 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
   <div class="tgTitle">NORA TOUCH FIELD V6</div>
   <div class="tgSub">タップ → PLAY / STOP　｜　ドラッグ → 音を変えてその位置にKEEP　｜　ダブルタップ → ORIGINAL</div>
   <div class="tgAxis"><span>← SLOW</span><b>ORIGINAL</b><span>FAST →</span></div>
-  <div class="tgAxis"><span>↓ VOLUME DOWN</span><span>↑ VOLUME UP</span></div>
+  <div class="tgAxis"><span>↓ LOW PITCH</span><span>↑ HIGH PITCH</span></div>
   <div class="tgSub">動かした距離に応じて軽いFXも加わります。中央へ戻すと完全バイパス。</div>
 </section>
 
@@ -96,356 +96,89 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
 <div id="touchReadout"></div><div id="status"></div>
 
 <script>
+/* NORA TOUCH FIELD V7 — lightweight playback engine
+   Playback uses native HTMLAudioElement instead of decoding all sounds into Web Audio buffers.
+   This keeps memory/CPU low while preserving independent play, loop, speed and volume. */
 const DIR="sounds/";
 const files={spring:"01_spring.mp3",onsen:"02_onsen.mp3",river:"03_river.mp3",shrine:"04_shrine.mp3",swing:"05_swing.mp3",campfire:"06_campfire.mp3",flame:"07_flame.mp3",cooking:"08_cooking.mp3",sauna:"09_sauna.mp3",camp:"10_camp.mp3"};
 const labels={spring:"SPRING",onsen:"ONSEN",river:"RIVER",shrine:"SHRINE",swing:"SWING",campfire:"CAMPFIRE",flame:"FLAME",cooking:"COOKING",sauna:"SAUNA",camp:"CAMP"};
 const ids=Object.keys(files), $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-function labelOf(id){return labels[id]||customLabels.get(id)||id.toUpperCase()}
-function fileOf(id){return files[id]||null}
-let ctx=null, master=null, analyser=null;
-const buffers=new Map(), voices=new Map(), states=new Map();
-const customBuffers=new Map(), customLabels=new Map();
-let mediaStream=null, mediaRecorder=null, mediaChunks=[], voiceReady=false, voiceRecTimer=null;
-const originalPos=new Map();
-const keptOffset=new Map();
-const touchParam=new Map();
-const TOUCH_RANGE=130;
-const VOLUME_MIN=0.08, VOLUME_MAX=1.45;
-const SPEED_MIN=0.55, SPEED_MAX=1.8;
-const loopState=new Map(ids.map(id=>[id,false]));
-loopState.set('voice',false);
-let activeDrag=null, dragMoved=false, touchReadoutTimer=null, clickTimer=null, lastTap=0, selectedId=null;
+const players=new Map(), loopState=new Map(ids.map(id=>[id,false])); loopState.set('voice',false);
+const touchParam=new Map(), originalPos=new Map(), keptOffset=new Map();
+const TOUCH_RANGE=130, VOLUME_MIN=.08, VOLUME_MAX=1.45, SPEED_MIN=.55, SPEED_MAX=1.8;
+let selectedId=null, activeDrag=null, dragMoved=false, lastTap=0, clickTimer=null, touchReadoutTimer=null;
+let mediaStream=null, mediaRecorder=null, mediaChunks=[], voiceReady=false, voiceRecTimer=null, voiceURL=null;
 
+function labelOf(id){return labels[id]|| (id==='voice'?'VOICE MEMO':id.toUpperCase())}
 function msg(t){$('#status').innerHTML='<button class="closeMsg" onclick="this.parentNode.classList.remove(\'show\')">×</button>'+t;$('#status').classList.add('show')}
 
-function initAudio(){
-  if(ctx)return;
-  ctx=new (window.AudioContext||window.webkitAudioContext)();
-  master=ctx.createGain(); master.gain.value=.88;
-  analyser=ctx.createAnalyser(); analyser.fftSize=1024; analyser.smoothingTimeConstant=.72;
-  master.connect(analyser); analyser.connect(ctx.destination);
-}
-async function ready(){initAudio(); if(ctx.state==='suspended') await ctx.resume();}
+function volumeFor(ny){return ny<=.5?1+(VOLUME_MAX-1)*(1-ny)/.5:1-(1-VOLUME_MIN)*(ny-.5)/.5}
+function speedFor(nx){return nx<=.5?SPEED_MIN+(1-SPEED_MIN)*(nx/.5):1+(SPEED_MAX-1)*((nx-.5)/.5)}
+function effectForTouch(nx){const dx=nx-.5,a=Math.min(1,Math.abs(dx)/.5);if(a<.08)return 'ORIGINAL / BYPASS';return dx<0?'SPACE / ECHO':'FILTER / DRIVE'}
+function paramsFor(id){const p=touchParam.get(id)||{x:0,y:0};return {volume:volumeFor((p.y+1)/2),speed:speedFor((p.x+1)/2),effect:effectForTouch((p.x+1)/2)}}
+function setReadout(id,volume,speed,effect){const el=$('#touchReadout');if(!el)return;el.innerHTML='<span class="readoutMain">'+labelOf(id)+'</span><br>VOLUME '+Math.round(volume*100)+'%　·　'+(speed>1.02?'FAST '+Math.round(speed*100)+'%':speed<.98?'SLOW '+Math.round(speed*100)+'%':'100%')+'　·　'+effect;el.classList.add('show');clearTimeout(touchReadoutTimer);touchReadoutTimer=setTimeout(()=>el.classList.remove('show'),350)}
 
-async function load(id){
-  await ready();
-  if(customBuffers.has(id)) return customBuffers.get(id);
-  if(buffers.has(id)) return buffers.get(id);
-  try{
-    const res=await fetch(DIR+files[id]);
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const arr=await res.arrayBuffer();
-    const b=await ctx.decodeAudioData(arr);
-    buffers.set(id,b); return b;
-  }catch(e){
-    console.error(e);
-    msg('<b>音源を読み込めません</b><br>'+files[id]+'<br><small>sounds フォルダのMP3名・配置を確認してください。</small>');
-    return null;
-  }
+function getPlayer(id){
+  let a=players.get(id); if(a)return a;
+  const src=id==='voice'?voiceURL:(DIR+files[id]);
+  if(!src)return null;
+  a=new Audio(); a.preload='none'; a.playsInline=true; a.loop=!!loopState.get(id); a.src=src;
+  a.addEventListener('ended',()=>{if(a.loop)return;players.delete(id);const el=document.querySelector('[data-id="'+id+'"]');if(el)el.classList.remove('playing','active');if(id==='voice')$('#vmPlay').classList.remove('active');updatePlayingState()});
+  a.addEventListener('error',()=>{players.delete(id);const el=document.querySelector('[data-id="'+id+'"]');if(el)el.classList.remove('playing','active');msg('<b>音源を再生できません</b><br>'+labelOf(id)+'<br><small>'+((id==='voice')?'VOICE MEMOの録音をやり直してください。':'sounds/'+files[id]+' を確認してください。')+'</small>');updatePlayingState()});
+  players.set(id,a); return a;
 }
-
-function setReadout(id,volume,speed,effect){
-  const el=$('#touchReadout');
-  const vol=Math.round(volume*100);
-  const sp=(speed>1.02?'FAST '+Math.round(speed*100)+'%':speed<.98?'SLOW '+Math.round(speed*100)+'%':'100%');
-  el.innerHTML='<span class="readoutMain">'+labelOf(id)+'</span><br>VOLUME '+vol+'%　·　'+sp+'　·　'+effect;
-  el.classList.add('show');
-  clearTimeout(touchReadoutTimer);
-  touchReadoutTimer=setTimeout(()=>el.classList.remove('show'),350);
-}
-
-function stopVoice(id){
-  const v=voices.get(id); if(!v)return;
-  try{v.source.onended=null;v.source.stop()}catch(e){}
-  try{v.source.disconnect()}catch(e){}
-  [v.input,v.filter,v.drive,v.delay,v.feedback,v.space,v.gain].forEach(n=>{try{n&&n.disconnect()}catch(e){}});
-  voices.delete(id);
-  const el=document.querySelector('[data-id="'+id+'"]');
-  if(el)el.classList.remove('playing','active');
-  if(id==='voice'){
-    $('#vmState').textContent=voiceReady?'READY':'NO RECORDING';
-    $('#vmPlay').classList.remove('active');
-  }
-  updatePlayingState();
-}
-function stopAll(){[...voices.keys()].forEach(stopVoice);$$('.object').forEach(e=>e.classList.remove('touching'));}
-
-function updatePlayingState(){
-  const p=voices.size>0;
-  document.body.classList.toggle('playing',p);
-  $('#rec').classList.toggle('on',p);
-  $('#recText').textContent=p?'REC / LIVE FIELD':'SIGNAL / STANDBY';
-  const current=selectedId&&voices.has(selectedId)?selectedId:(p?[...voices.keys()].at(-1):selectedId);
-  if(current){
-    $('#nowName').textContent=labelOf(current)||'FIELD';
-    $('#nowSub').textContent=voices.has(current)?'再生中 · ドラッグでVOLUME / SPEED / ダブルタップでORIGINAL':'停止中 · ダブルタップでORIGINAL';
-  }else{$('#nowName').textContent='—';$('#nowSub').textContent='サウンドポイントを選択してください。';}
-  updateLoopButton();
-  if(!voices.has('voice')) $('#vmPlay').classList.remove('active');
-}
-
-function effectForTouch(nx,ny){
-  // V6: vertical movement is volume only. FX follows the horizontal axis so the two controls stay intuitive.
-  const dx=nx-.5;
-  const amount=Math.min(1,Math.abs(dx)/.5);
-  if(amount<.08) return {name:'ORIGINAL / BYPASS',mode:'dry',amount:0};
-  if(dx<0) return {name:'SPACE / ECHO',mode:'space',amount};
-  return {name:'FILTER / DRIVE',mode:'filter',amount};
-}
-
-function applyVoiceTouch(v,nx,ny){
-  // V6: Y = volume, X = speed. Center is the original/bypass state.
-  const volume=VOLUME_MIN + (1-ny)*(VOLUME_MAX-VOLUME_MIN);
-  const speed=SPEED_MIN + nx*(SPEED_MAX-SPEED_MIN);
-  v.source.playbackRate.setTargetAtTime(speed,ctx.currentTime,.018);
-  v.gain.gain.setTargetAtTime(volume,ctx.currentTime,.018);
-  const ef=effectForTouch(nx,ny);
-  if(ef.mode==='dry'){
-    v.filter.frequency.setTargetAtTime(22000,ctx.currentTime,.03); v.filter.Q.value=.7;
-    v.drive.gain.value=0; v.space.gain.value=0; v.delayGain.gain.value=0;
-  }else if(ef.mode==='filter'){
-    const f=22000-(ef.amount*19000);
-    v.filter.frequency.setTargetAtTime(Math.max(700,f),ctx.currentTime,.03); v.filter.Q.value=1+ef.amount*5;
-    v.drive.gain.value=ef.amount*.10; v.space.gain.value=0; v.delayGain.gain.value=ef.amount*.04;
-  }else{
-    v.filter.frequency.setTargetAtTime(22000-ef.amount*4500,ctx.currentTime,.03); v.filter.Q.value=1;
-    v.drive.gain.value=0; v.space.gain.value=ef.amount*.10; v.delayGain.gain.value=ef.amount*.05;
-  }
-  return {volume,speed,effect:ef.name};
-}
-
+function applyParams(id){const a=players.get(id);if(!a)return;const p=paramsFor(id);a.playbackRate=p.speed;a.volume=Math.max(0,Math.min(1,p.volume));setReadout(id,p.volume,p.speed,p.effect)}
 async function play(id){
   selectedId=id;
-  await ready();
-  if(voices.has(id)){stopVoice(id);return;}
-  const b=await load(id); if(!b)return;
-  const source=ctx.createBufferSource(); source.buffer=b; source.loop=!!loopState.get(id); source.playbackRate.value=1; source.detune.value=0;
-  const input=ctx.createGain(); input.gain.value=1;
-  const filter=ctx.createBiquadFilter(); filter.type='lowpass'; filter.frequency.value=22000; filter.Q.value=.7;
-  // Lightweight per-voice FX: no ConvolverNode/impulse generation on every play.
-  const drive=ctx.createGain(); drive.gain.value=0;
-  const delay=ctx.createDelay(.35); delay.delayTime.value=.13;
-  const delayGain=ctx.createGain(); delayGain.gain.value=0;
-  const feedback=ctx.createGain(); feedback.gain.value=.08;
-  const gain=ctx.createGain(); gain.gain.value=1;
-  source.connect(input); input.connect(filter); filter.connect(gain); gain.connect(master);
-  filter.connect(delay); delay.connect(delayGain); delayGain.connect(master); delay.connect(feedback); feedback.connect(delay);
-  // Drive is intentionally a simple gain texture here; saturation is avoided for low-end devices.
-  filter.connect(drive); drive.connect(master);
-  const v={source,input,filter,drive,delay,delayGain,feedback,space:null,gain};
-  voices.set(id,v);
-  const el=document.querySelector('[data-id="'+id+'"]'); if(el)el.classList.add('playing');
-  source.onended=()=>{if(voices.get(id)===v){voices.delete(id);if(el)el.classList.remove('playing');if(id==='voice')$('#vmPlay').classList.remove('active');updatePlayingState();}};
-  const tp=(id==='voice')?{x:0,y:0}:(touchParam.get(id)||{x:0,y:0});
-  applyVoiceTouch(v,(tp.x+1)/2,(tp.y+1)/2);
-  if(id==='voice'){
-    source.playbackRate.setValueAtTime(1,ctx.currentTime);
-    source.detune.setValueAtTime(0,ctx.currentTime);
-    v.gain.gain.setValueAtTime(1,ctx.currentTime);
-  }
-  source.start();
-  if(id==='voice'){$('#vmState').textContent='PLAYING';$('#vmPlay').classList.add('active');}
+  const a=getPlayer(id);if(!a)return;
+  if(!a.paused){a.pause();a.currentTime=0;players.delete(id);const el=document.querySelector('[data-id="'+id+'"]');if(el)el.classList.remove('playing','active');if(id==='voice')$('#vmPlay').classList.remove('active');updatePlayingState();return;}
+  applyParams(id); a.loop=!!loopState.get(id);
+  try{await a.play();}catch(e){console.error(e);msg('<b>再生できませんでした</b><br>もう一度アイコンを押してください。');return;}
+  const el=document.querySelector('[data-id="'+id+'"]');if(el)el.classList.add('playing');
+  if(id==='voice'){$('#vmState').textContent='PLAYING';$('#vmPlay').classList.add('active')}
   updatePlayingState();
-  if(id!=='voice') trigger(id);
+  if(id!=='voice')trigger(id);
 }
+function stopVoice(id){const a=players.get(id);if(!a)return;try{a.pause();a.currentTime=0}catch(e){}players.delete(id);const el=document.querySelector('[data-id="'+id+'"]');if(el)el.classList.remove('playing','active');if(id==='voice'){if(voiceReady)$('#vmState').textContent='READY';$('#vmPlay').classList.remove('active')}updatePlayingState()}
+function stopAll(){[...players.keys()].forEach(stopVoice);$$('.object').forEach(e=>e.classList.remove('touching'))}
+function updatePlayingState(){const p=players.size>0;document.body.classList.toggle('playing',p);$('#rec').classList.toggle('on',p);$('#recText').textContent=p?'REC / LIVE FIELD':'SIGNAL / STANDBY';const current=selectedId&&players.has(selectedId)?selectedId:(p?[...players.keys()].at(-1):selectedId);if(current){$('#nowName').textContent=labelOf(current);$('#nowSub').textContent=players.has(current)?'再生中 · ドラッグでVOLUME / SPEED / ダブルタップでORIGINAL':'停止中 · ダブルタップでORIGINAL'}else{$('#nowName').textContent='—';$('#nowSub').textContent='サウンドポイントを選択してください。'}updateLoopButton();if(!players.has('voice'))$('#vmPlay').classList.remove('active')}
 
-function makeDriveCurve(amount){
-  const n=1024,c=new Float32Array(n),k=amount;
-  for(let i=0;i<n;i++){const x=i*2/n-1;c[i]=k===0?x:Math.tanh((1+k*8)*x);}
-  return c;
-}
-function makeImpulse(sec,decay){
-  const len=Math.floor(ctx.sampleRate*sec),b=ctx.createBuffer(2,len,ctx.sampleRate);
-  for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay)}
-  return b;
-}
+function setOriginalPosition(el,resetAudio=true){const p=originalPos.get(el.id);if(!p)return;el.style.left=p.left;el.style.top=p.top;el.style.transform='';keptOffset.set(el.id,{x:0,y:0});touchParam.set(el.id,{x:0,y:0});el.classList.remove('kept');if(resetAudio){const id=el.dataset.id;applyParams(id);if(players.has(id))setReadout(id,1,1,'ORIGINAL / BYPASS')}}
+function resetToOriginal(el){setOriginalPosition(el,true);selectedId=el.dataset.id;setReadout(el.dataset.id,1,1,'ORIGINAL / BYPASS');updatePlayingState()}
+function beginTouch(e,el){if(e.pointerType==='mouse'&&e.button!==0)return;e.preventDefault();e.stopPropagation();const b=touchParam.get(el.id)||{x:0,y:0};activeDrag={el,id:el.dataset.id,startX:e.clientX,startY:e.clientY,pointerId:e.pointerId,baseX:b.x,baseY:b.y};dragMoved=false;el.setPointerCapture?.(e.pointerId);el.classList.add('touching')}
+function moveTouch(e){if(!activeDrag)return;const a=activeDrag,el=a.el,dx=e.clientX-a.startX,dy=e.clientY-a.startY;if(Math.hypot(dx,dy)>5)dragMoved=true;const px=Math.max(-1,Math.min(1,a.baseX+dx/TOUCH_RANGE)),py=Math.max(-1,Math.min(1,a.baseY+dy/TOUCH_RANGE));el.style.transform=`translate(${px*TOUCH_RANGE}px,${py*TOUCH_RANGE}px) scale(1.1)`;touchParam.set(el.id,{x:px,y:py});const p=players.get(a.id);if(p){applyParams(a.id)}else{const v=volumeFor((py+1)/2),s=speedFor((px+1)/2);setReadout(a.id,v,s,effectForTouch((px+1)/2))}}
+function endTouch(e){if(!activeDrag)return;const a=activeDrag,el=a.el,id=a.id;el.classList.remove('touching');try{el.releasePointerCapture?.(a.pointerId)}catch(err){}activeDrag=null;if(dragMoved){el.classList.add('kept');selectedId=id;const p=touchParam.get(id)||{x:0,y:0};keptOffset.set(id,{x:p.x*TOUCH_RANGE,y:p.y*TOUCH_RANGE});el.style.transform=`translate(${p.x*TOUCH_RANGE}px,${p.y*TOUCH_RANGE}px)`;updatePlayingState();return}const now=performance.now();if(now-lastTap<360){clearTimeout(clickTimer);clickTimer=null;lastTap=0;resetToOriginal(el);return}lastTap=now;clearTimeout(clickTimer);clickTimer=setTimeout(()=>{clickTimer=null;play(id)},230)}
 
-function setOriginalPosition(el, resetAudio=true){
-  const p=originalPos.get(el.id); if(!p)return;
-  el.style.left=p.left; el.style.top=p.top; el.style.transform='';
-  keptOffset.set(el.id,{x:0,y:0});
-  touchParam.set(el.id,{x:0,y:0});
-  el.classList.remove('kept');
-  if(resetAudio){
-    const id=el.dataset.id, v=voices.get(id);
-    if(v){
-      applyVoiceTouch(v,.5,.5);
-      setReadout(id,.765,1,'ORIGINAL / BYPASS');
-    }
-  }
-}
-
-function pointerPos(e){return {x:e.clientX,y:e.clientY};}
-function beginTouch(e,el){
-  if(e.pointerType==='mouse' && e.button!==0)return;
-  e.preventDefault(); e.stopPropagation();
-  const base=touchParam.get(el.id)||{x:0,y:0};
-  activeDrag={el,id:el.dataset.id,startX:e.clientX,startY:e.clientY,lastX:e.clientX,lastY:e.clientY,pointerId:e.pointerId,baseX:base.x,baseY:base.y};
-  dragMoved=false; el.setPointerCapture?.(e.pointerId); el.classList.add('touching');
-}
-function moveTouch(e){
-  if(!activeDrag)return;
-  const a=activeDrag,el=a.el;
-  const dx=e.clientX-a.startX,dy=e.clientY-a.startY;
-  if(Math.hypot(dx,dy)>5)dragMoved=true;
-  const px=Math.max(-1,Math.min(1,a.baseX+dx/TOUCH_RANGE));
-  const py=Math.max(-1,Math.min(1,a.baseY+dy/TOUCH_RANGE));
-  el.style.transform=`translate(${px*TOUCH_RANGE}px,${py*TOUCH_RANGE}px) scale(1.1)`;
-  touchParam.set(el.id,{x:px,y:py});
-  const v=voices.get(a.id);
-  const nx=(px+1)/2, ny=(py+1)/2;
-  if(v){const r=applyVoiceTouch(v,nx,ny);setReadout(a.id,r.volume,r.speed,r.effect);}
-  else setReadout(a.id,VOLUME_MIN+(1-ny)*(VOLUME_MAX-VOLUME_MIN),SPEED_MIN+nx*(SPEED_MAX-SPEED_MIN),effectForTouch(nx,ny).name);
-}
-
-function resetToOriginal(el){
-  const id=el.dataset.id;
-  setOriginalPosition(el,true);
-  const v=voices.get(id);
-  if(v) applyVoiceTouch(v,.5,.5);
-  setReadout(id,.765,1,'ORIGINAL / BYPASS');
-  selectedId=id;
-  updatePlayingState();
-}
-function handleSingleTap(id){
-  selectedId=id;
-  play(id);
-}
-function endTouch(e){
-  if(!activeDrag)return;
-  const a=activeDrag,el=a.el,id=a.id;
-  el.classList.remove('touching');
-  try{el.releasePointerCapture?.(a.pointerId)}catch(err){}
-  activeDrag=null;
-  if(dragMoved){
-    el.classList.add('kept');
-    selectedId=id;
-    const p=touchParam.get(id)||{x:0,y:0};
-    keptOffset.set(id,{x:p.x*TOUCH_RANGE,y:p.y*TOUCH_RANGE});
-    el.style.transform=`translate(${p.x*TOUCH_RANGE}px,${p.y*TOUCH_RANGE}px)`;
-    updatePlayingState();
-    return;
-  }
-  const now=performance.now();
-  if(now-lastTap<360){
-    clearTimeout(clickTimer); clickTimer=null; lastTap=0;
-    resetToOriginal(el);
-    return;
-  }
-  lastTap=now;
-  clearTimeout(clickTimer);
-  clickTimer=setTimeout(()=>{clickTimer=null;handleSingleTap(id)},230);
-}
-
-$$('.object').forEach(el=>{
-  originalPos.set(el.id,{left:getComputedStyle(el).left,top:getComputedStyle(el).top});
-  keptOffset.set(el.id,{x:0,y:0});
-  const mark=document.createElement('span'); mark.className='keepMark'; el.appendChild(mark);
-  bindObject(el);
-});
-
-function updateLoopButton(){
-  const id=selectedId;
-  const btn=$('#loopBtn');
-  if(!btn)return;
-  const on=!!(id&&loopState.get(id));
-  btn.textContent=on?'LOOP ON':'LOOP OFF';
-  btn.classList.toggle('loopOn',on); btn.classList.toggle('loopOff',!on);
-}
-$('#loopBtn').onclick=async()=>{
-  if(!selectedId)return;
-  const id=selectedId, on=!loopState.get(id);
-  loopState.set(id,on);
-  const v=voices.get(id);
-  if(v) v.source.loop=on;
-  updateLoopButton();
-  $('#nowSub').textContent=on?'LOOP中 · ダブルタップでORIGINAL':'再生中 · ドラッグでVOLUME / SPEED / ダブルタップでORIGINAL';
-};
-
-$('#stopAll').onclick=()=>{if(selectedId)stopVoice(selectedId);};
-$('#allStop').onclick=stopAll;
-$('#allReset').onclick=()=>{stopAll(); $$('.object').forEach(el=>setOriginalPosition(el,false)); loopState.forEach((_,id)=>loopState.set(id,false)); updatePlayingState();};
-$('#allPlay').onclick=async()=>{await ready(); for(const id of ids){ if(!voices.has(id)) await play(id); }};
+$$('.object').forEach(el=>{originalPos.set(el.id,{left:getComputedStyle(el).left,top:getComputedStyle(el).top});touchParam.set(el.id,{x:0,y:0});keptOffset.set(el.id,{x:0,y:0});const mark=document.createElement('span');mark.className='keepMark';el.appendChild(mark);el.addEventListener('pointerdown',e=>beginTouch(e,el));el.addEventListener('pointermove',moveTouch);el.addEventListener('pointerup',endTouch);el.addEventListener('pointercancel',endTouch)});
+function updateLoopButton(){const id=selectedId,btn=$('#loopBtn');if(!btn)return;const on=!!(id&&loopState.get(id));btn.textContent=on?'LOOP ON':'LOOP OFF';btn.classList.toggle('loopOn',on);btn.classList.toggle('loopOff',!on)}
+$('#loopBtn').onclick=()=>{if(!selectedId)return;const on=!loopState.get(selectedId);loopState.set(selectedId,on);const a=players.get(selectedId);if(a)a.loop=on;updateLoopButton()};
+$('#stopAll').onclick=()=>{if(selectedId)stopVoice(selectedId)};$('#allStop').onclick=stopAll;$('#allReset').onclick=()=>{stopAll();$$('.object').forEach(el=>setOriginalPosition(el,false));loopState.forEach((_,id)=>loopState.set(id,false));updatePlayingState()};$('#allPlay').onclick=async()=>{for(const id of ids)if(!players.has(id))await play(id)};
 
 async function startVoiceRecording(){
   try{
-    if(voices.has('voice')) stopVoice('voice');
-    await ready();
-    if(!navigator.mediaDevices?.getUserMedia){msg('このブラウザではマイク録音に対応していません。');return;}
-    if(mediaRecorder && mediaRecorder.state==='recording')return;
-    mediaStream=await navigator.mediaDevices.getUserMedia({audio:true});
+    stopVoice('voice');
+    if(!navigator.mediaDevices?.getUserMedia){msg('このブラウザではマイク録音に対応していません。');return}
+    if(mediaRecorder&&mediaRecorder.state==='recording')return;
+    mediaStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
     const mime=['audio/webm;codecs=opus','audio/webm','audio/mp4'].find(t=>MediaRecorder.isTypeSupported(t))||'';
     mediaRecorder=mime?new MediaRecorder(mediaStream,{mimeType:mime}):new MediaRecorder(mediaStream);
-    mediaChunks=[];
-    mediaRecorder.ondataavailable=e=>{if(e.data.size)mediaChunks.push(e.data)};
-    mediaRecorder.onstop=async()=>{
-      const blob=new Blob(mediaChunks,{type:mediaRecorder.mimeType||'audio/webm'});
-      mediaChunks=[]; mediaStream?.getTracks().forEach(t=>t.stop()); mediaStream=null;
-      try{
-        const arr=await blob.arrayBuffer();
-        const decoded=await ctx.decodeAudioData(arr);
-        // Voice memo: downmix to mono, but keep the original sample rate.
-        // This avoids any unnecessary sample-rate conversion that can make a recorded memo sound wrong on some browsers.
-        const targetRate=decoded.sampleRate;
-        const targetLength=Math.max(1,decoded.length);
-        const offline=new OfflineAudioContext(1,targetLength,targetRate);
-        const src=offline.createBufferSource(); src.buffer=decoded; src.connect(offline.destination); src.start();
-        const b=await offline.startRendering();
-        touchParam.set('voice',{x:0,y:0});
-        const id='voice'; customBuffers.set(id,b); customLabels.set(id,'VOICE MEMO'); voiceReady=true;
-        selectedId=id; $('#vmState').textContent='RECORDED';
-        $('#voicePlayer').classList.add('ready');
-        $('#voicePlayerName').textContent='VOICE MEMO';
-        msg('録音した音をVOICE MEMO PLAYERにセットしました。FIELDの音と重ねて再生できます。');
-        updatePlayingState();
-      }catch(err){console.error(err);msg('録音データを音源として読み込めませんでした。');}
-    };
-    mediaRecorder.start(4000); $('#vmState').textContent='RECORDING'; $('#vmRec').classList.add('recOn'); clearTimeout(voiceRecTimer); voiceRecTimer=setTimeout(stopVoiceRecording,20000);
-  }catch(err){console.error(err);msg('マイクへのアクセスが許可されませんでした。HTTPSのページでマイクを許可してください。');}
+    mediaChunks=[];mediaRecorder.ondataavailable=e=>{if(e.data.size)mediaChunks.push(e.data)};
+    mediaRecorder.onstop=()=>{const blob=new Blob(mediaChunks,{type:mediaRecorder.mimeType||'audio/webm'});mediaChunks=[];mediaStream?.getTracks().forEach(t=>t.stop());mediaStream=null;if(voiceURL)URL.revokeObjectURL(voiceURL);voiceURL=URL.createObjectURL(blob);voiceReady=true;players.delete('voice');selectedId='voice';$('#vmState').textContent='RECORDED';$('#voicePlayer').classList.add('ready');$('#voicePlayerName').textContent='VOICE MEMO';msg('録音をVOICE MEMOにセットしました。');updatePlayingState()};
+    mediaRecorder.start(1000);$('#vmState').textContent='RECORDING';$('#vmRec').classList.add('recOn');clearTimeout(voiceRecTimer);voiceRecTimer=setTimeout(stopVoiceRecording,20000);
+  }catch(err){console.error(err);msg('マイクへのアクセスが許可されませんでした。HTTPSのページでマイクを許可してください。')}
 }
-function stopVoiceRecording(){clearTimeout(voiceRecTimer); voiceRecTimer=null; if(mediaRecorder&&mediaRecorder.state==='recording'){mediaRecorder.stop();$('#vmState').textContent='PROCESSING';$('#vmRec').classList.remove('recOn');}}
-async function playVoiceMemo(){if(voiceReady){selectedId='voice';play('voice')}}
-$('#vmRec').onclick=startVoiceRecording; $('#vmStop').onclick=()=>{ if(mediaRecorder&&mediaRecorder.state==='recording') stopVoiceRecording(); else if(voices.has('voice')) stopVoice('voice'); }; $('#vmPlay').onclick=playVoiceMemo;
+function stopVoiceRecording(){clearTimeout(voiceRecTimer);voiceRecTimer=null;if(mediaRecorder&&mediaRecorder.state==='recording'){mediaRecorder.stop();$('#vmState').textContent='PROCESSING';$('#vmRec').classList.remove('recOn')}}
+function playVoiceMemo(){if(voiceReady){selectedId='voice';play('voice')}}
+$('#vmRec').onclick=startVoiceRecording;$('#vmStop').onclick=()=>{if(mediaRecorder&&mediaRecorder.state==='recording')stopVoiceRecording();else stopVoice('voice')};$('#vmPlay').onclick=playVoiceMemo;
+$('#voiceToggle').onclick=()=>$('#voiceDock').classList.toggle('open');$('#vmLoop').onclick=()=>{if(!voiceReady)return;const on=!loopState.get('voice');loopState.set('voice',on);const a=players.get('voice');if(a)a.loop=on;$('#vmLoop').textContent=on?'LOOP ON':'LOOP OFF'};
 
-$('#voiceToggle').onclick=()=>$('#voiceDock').classList.toggle('open');
-$('#vmLoop').onclick=()=>{if(!voiceReady)return; const on=!loopState.get('voice'); loopState.set('voice',on); const v=voices.get('voice'); if(v)v.source.loop=on; $('#vmLoop').textContent=on?'LOOP ON':'LOOP OFF';};
+/* Low-cost field reactions: no generated ripple/steam DOM and no continuous pointer parallax. */
+function trigger(id){const el=document.querySelector('[data-id="'+id+'"]');if(!el)return;if(id==='swing'){const c=el.querySelector('.objCore');c.animate([{transform:'rotate(0)'},{transform:'rotate(7deg)'},{transform:'rotate(-6deg)'},{transform:'rotate(0)'}],650)}else if(id==='campfire'||id==='flame'){const f=$('.fire');if(f){f.classList.add('pulse');setTimeout(()=>f.classList.remove('pulse'),450)}}else if(id==='shrine'){const fl=$('#flash');if(fl){fl.animate([{opacity:0},{opacity:.25},{opacity:0}],180)}}}
 
-function bindObject(el){
-  el.addEventListener('pointerdown',e=>beginTouch(e,el));
-  el.addEventListener('pointermove',moveTouch);
-  el.addEventListener('pointerup',endTouch);
-  el.addEventListener('pointercancel',endTouch);
-}
+/* Keep the scene light: 10 small background trees instead of 28 filtered DOM elements. */
+const forest=$('#forest');if(forest){forest.innerHTML='';for(let i=0;i<10;i++){const t=document.createElement('span');t.style.cssText=`position:absolute;left:${Math.random()*100}%;top:${30+Math.random()*62}%;width:0;height:0;border-left:28px solid transparent;border-right:28px solid transparent;border-bottom:${60+Math.random()*55}px solid #10281f;opacity:.8`;forest.appendChild(t)}}
 
-function trigger(id){
-  const el=document.querySelector('[data-id="'+id+'"]');if(!el)return;
-  if(id==='river'||id==='spring')for(let i=0;i<4;i++)setTimeout(()=>ripple(el),i*170);
-  if(id==='onsen'||id==='sauna')for(let i=0;i<5;i++)setTimeout(()=>steam(el),i*150);
-  if(id==='campfire'||id==='flame'){const f=$('.fire');f.style.transform='scale(1.5)';setTimeout(()=>f.style.transform='',650)}
-  if(id==='swing'){ const core=el.querySelector('.objCore'); core.animate([{transform:'rotate(0)'},{transform:'rotate(8deg)'},{transform:'rotate(-7deg)'},{transform:'rotate(0)'}],900); }
-  if(id==='shrine')$('#flash').animate([{opacity:0},{opacity:.4},{opacity:0}],220);
-}
-function ripple(el){const r=document.createElement('div');r.className='ripple';r.style.left=(el.offsetLeft+27)+'px';r.style.top=(el.offsetTop+27)+'px';$('#scene').appendChild(r);setTimeout(()=>r.remove(),1500)}
-function steam(el){const s=document.createElement('div');s.className='steam';s.style.left=(el.offsetLeft+20+Math.random()*25)+'px';s.style.top=(el.offsetTop+15)+'px';$('#scene').appendChild(s);setTimeout(()=>s.remove(),2300)}
-
-for(let i=0;i<28;i++){const t=document.createElement('span');t.style.cssText=`position:absolute;left:${Math.random()*100}%;top:${25+Math.random()*70}%;width:0;height:0;border-left:34px solid transparent;border-right:34px solid transparent;border-bottom:${75+Math.random()*55}px solid #10281f;transform:scale(${.5+Math.random()*.9});filter:drop-shadow(0 12px 13px #000);opacity:.88`;$('#forest').appendChild(t)}
-addEventListener('pointermove',e=>{if(activeDrag)return;document.documentElement.style.setProperty('--mx',((e.clientX/innerWidth-.5)*-18)+'px');document.documentElement.style.setProperty('--my',((e.clientY/innerHeight-.5)*-10)+'px')});
-let zoom=1;addEventListener('wheel',e=>{zoom=Math.max(.96,Math.min(1.12,zoom-e.deltaY*.00025));document.documentElement.style.setProperty('--zoom',zoom)},{passive:true});
-
-function rmsDb(arr){let s=0;for(let i=0;i<arr.length;i++)s+=arr[i]*arr[i];return 20*Math.log10(Math.sqrt(s/arr.length)||1e-7)}
-function pct(db){return Math.max(0,Math.min(100,(db+24)/24*100))}
-function meters(){
-  if(!analyser)return;
-  const td=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(td);
-  const db=voices.size?rmsDb(td):-60;
-  $('#lFill').style.width=pct(db)+'%';$('#rFill').style.width=pct(db)+'%';
-  $('#ldb').textContent=db<-59?'-∞ dB':Math.round(db)+' dB';$('#rdb').textContent=db<-59?'-∞ dB':Math.round(db)+' dB';
-  const u=new Uint8Array(analyser.fftSize);analyser.getByteTimeDomainData(u);
-  if(!voices.size){$('#wavePath').setAttribute('d','M0 25 L330 25');return}
-  let path='',N=130;for(let i=0;i<N;i++){const y=25+(u[Math.floor(i/N*u.length)]-128)*.28;path+=(i?'L':'M')+(i/(N-1)*330).toFixed(1)+' '+y.toFixed(1)+' '}
-  $('#wavePath').setAttribute('d',path);
-}
-let meterFrame=0; function loop(){ if((meterFrame++%3)===0) meters(); requestAnimationFrame(loop)}
-loop();
+/* Lightweight visual meter. It does not analyse audio; it simply reflects playback activity without a permanent AudioContext. */
+let visualFrame=0;function visualLoop(now){if(players.size){visualFrame++;if((visualFrame%5)===0){const base=18+Math.abs(Math.sin(now*.004))*60,boost=Math.min(22,[...players.values()].reduce((m,a)=>Math.max(m,a.volume),0)*22);const v=Math.min(100,base+boost);$('#lFill').style.width=v+'%';$('#rFill').style.width=Math.max(0,v-4)+'%';$('#ldb').textContent='LIVE';$('#rdb').textContent='LIVE';const wave=$('#wavePath');if(wave){let d='';for(let i=0;i<70;i++){const y=25+Math.sin(i*.55+now*.008)*((v/100)*8);d+=(i?'L':'M')+(i/69*330).toFixed(1)+' '+y.toFixed(1)+' '}wave.setAttribute('d',d)}}}else{if((visualFrame++%12)===0){$('#lFill').style.width='0%';$('#rFill').style.width='0%';$('#ldb').textContent='-∞ dB';$('#rdb').textContent='-∞ dB';$('#wavePath').setAttribute('d','M0 25 L330 25')}}requestAnimationFrame(visualLoop)}requestAnimationFrame(visualLoop);
 </script>
 </body></html>
