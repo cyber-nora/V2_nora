@@ -15,16 +15,15 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
 #sampler{position:fixed;z-index:400;left:18px;bottom:18px;width:350px;padding:14px;border-radius:15px}.head{display:flex;justify-content:space-between;align-items:center}.eyebrow{font-size:7px;letter-spacing:.2em;color:#8f9b94}.sampleName{font-size:17px;letter-spacing:.08em;margin-top:3px}.sampleNo{font-size:7px;color:#77837c;letter-spacing:.12em}.row{margin-top:10px}.rowline{display:flex;justify-content:space-between;align-items:center;font-size:7px;color:#aeb8b2}.value{color:#e7eee9;font-variant-numeric:tabular-nums}input[type=range]{width:100%;height:12px;accent-color:var(--accent)}
 .actions{display:flex;gap:6px;margin-top:10px}.btn{border:1px solid rgba(255,255,255,.14);background:#101714;color:#eee;border-radius:16px;padding:6px 11px;font-size:7px;letter-spacing:.1em}.btn.active{border-color:var(--accent);box-shadow:0 0 14px rgba(170,240,200,.12);color:#fff}.btn.primary{background:rgba(217,243,223,.1)}
 #keys{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;margin-top:12px;height:54px}.key{position:relative;border:1px solid rgba(255,255,255,.16);border-radius:0 0 7px 7px;background:linear-gradient(#f0f0e8,#bfc5bd);color:#1c211e;box-shadow:0 5px 12px #0007;font-size:7px}.key span{position:absolute;left:0;right:0;bottom:5px}.key.active,.key:active{background:var(--accent);transform:translateY(2px);box-shadow:0 2px 7px #0008}.hint{margin-top:7px;font-size:6px;color:#68736d;letter-spacing:.08em}
-#hud{position:fixed;z-index:310;right:20px;top:18px;width:330px;padding:12px;border-radius:13px}.hudtop{display:flex;justify-content:space-between;font-size:7px;letter-spacing:.16em;color:#a9b4ad}.meter{height:10px;margin:5px 0 1px;border:1px solid #27352e;background:repeating-linear-gradient(90deg,#18211d 0 7px,#0b110e 7px 10px);overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#34d66a 0 67%,#e2e84a 78%,#ff982c 91%,#ed3731);box-shadow:0 0 10px rgba(65,230,115,.38)}.ticks{display:flex;justify-content:space-between;color:#68736d;font-size:6px;margin-bottom:5px}.recrow{display:flex;align-items:center;gap:7px;margin-top:5px;font-size:7px;letter-spacing:.13em}.rec{width:9px;height:9px;border-radius:50%;background:#3c433f}.rec.on{background:#ff2222;box-shadow:0 0 8px 3px rgba(255,30,30,.62);animation:pulse .85s infinite}@keyframes pulse{50%{opacity:.35}}.wave{height:43px;width:100%;display:block}.waveLine{fill:none;stroke:url(#waveGrad);stroke-width:2.2}
 #now{position:fixed;z-index:305;right:20px;top:207px;width:330px;padding:10px 12px;border-radius:11px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:.25s}body.playing #now{opacity:1;visibility:visible;transform:none}.nowTitle{font-size:7px;letter-spacing:.18em;color:#8e9993}.nowName{font-size:14px;margin-top:3px}.nowSub{font-size:7px;color:#89958e;margin-top:2px}.stop{margin-top:7px;border:1px solid rgba(255,255,255,.14);background:#101714;color:#eee;border-radius:16px;padding:5px 10px;font-size:7px}
-.object{position:absolute;z-index:200;cursor:pointer;user-select:none;touch-action:none;transition:transform .2s,filter .2s}.object:hover{transform:scale(1.06)}.object.active{filter:brightness(1.5) drop-shadow(0 0 18px var(--accent))}.objCore{width:55px;height:55px;border:1px solid rgba(255,255,255,.58);border-radius:50%;display:grid;place-items:center;background:rgba(4,12,10,.48);backdrop-filter:none;font-size:23px;box-shadow:0 0 0 4px rgba(255,255,255,.035)}.objLabel{font-size:7px;text-align:center;letter-spacing:.08em;margin-top:6px;text-shadow:0 2px 9px #000;white-space:nowrap}
+.object{position:absolute;z-index:200;cursor:pointer;user-select:none;touch-action:none;transition:filter .2s}.object:hover .objCore{transform:scale(1.06)}.objCore{transition:transform .15s}.object.active{filter:brightness(1.5) drop-shadow(0 0 18px var(--accent))}.objCore{width:55px;height:55px;border:1px solid rgba(255,255,255,.58);border-radius:50%;display:grid;place-items:center;background:rgba(4,12,10,.48);backdrop-filter:none;font-size:23px;box-shadow:0 0 0 4px rgba(255,255,255,.035)}.objLabel{font-size:7px;text-align:center;letter-spacing:.08em;margin-top:6px;text-shadow:0 2px 9px #000;white-space:nowrap}
 #spring{left:43%;top:18%}#onsen{left:55%;top:24%}#riverObj{left:34%;top:43%}#shrine{left:69%;top:27%}#swing{left:78%;top:43%}#campfire{left:50%;top:58%}#flameObj{left:60%;top:53%}#cooking{left:70%;top:61%}#sauna{left:30%;top:61%}#whole{left:49%;top:75%}
 .ground{position:absolute;left:4%;right:4%;bottom:-5%;height:67%;background:radial-gradient(ellipse at 50% 35%,rgba(60,108,78,.72),transparent 49%),radial-gradient(ellipse at 50% 100%,#08130e 0,#14271d 60%,transparent 61%);transform:rotateX(55deg);transform-origin:50% 100%}.path{position:absolute;left:47%;bottom:1%;width:10%;height:72%;background:linear-gradient(90deg,transparent,#293c30 24%,#455446 50%,#1b2b22 76%,transparent);transform:skewX(-10deg)}.river{position:absolute;left:6%;top:12%;width:28%;height:84%;border-radius:48% 42% 55% 35%;background:repeating-radial-gradient(ellipse at 50% 50%,rgba(65,166,171,.85) 0 3px,rgba(20,73,72,.78) 5px 13px,rgba(6,35,34,.86) 16px 28px);transform:rotate(-9deg);filter:drop-shadow(0 0 20px rgba(45,200,200,.2));animation:water 5s ease-in-out infinite}@keyframes water{50%{filter:drop-shadow(0 0 32px rgba(70,220,210,.38)) brightness(1.12)}}
 .camp{position:absolute;left:51%;top:49%;width:270px;height:170px;transform:translate(-50%,-50%);filter:drop-shadow(0 25px 30px rgba(0,0,0,.55))}.tent{position:absolute;left:18px;bottom:15px;width:150px;height:92px;background:linear-gradient(135deg,#b9a77d,#4b4433);clip-path:polygon(50% 0,100% 100%,0 100%)}.tent:after{content:"";position:absolute;left:57px;bottom:0;width:35px;height:50px;background:#171714;box-shadow:0 0 17px rgba(255,190,78,.25)}.tent2{position:absolute;right:12px;bottom:20px;width:108px;height:70px;background:linear-gradient(135deg,#8f8367,#35372e);clip-path:polygon(50% 0,100% 100%,0 100%)}.fire{position:absolute;left:116px;bottom:0;width:55px;height:72px;transform-origin:50% 100%;transition:transform .2s;filter:drop-shadow(0 0 18px rgba(255,99,22,.65))}.flame{position:absolute;left:8px;bottom:0;width:38px;height:61px;background:linear-gradient(#ffe66b,#ff9b20 45%,#e4381a);clip-path:polygon(50% 0,75% 28%,64% 25%,90% 55%,65% 100%,18% 100%,0 63%,28% 30%);animation:flame 1s ease-in-out infinite alternate}@keyframes flame{to{transform:scale(.86,.94) rotate(2deg)}}.lamp{position:absolute;right:6px;bottom:42px;width:13px;height:13px;border-radius:50%;background:#ffd878;box-shadow:0 0 22px 8px rgba(255,193,76,.35)}
 #rain{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .4s;background:repeating-linear-gradient(105deg,transparent 0 22px,rgba(165,210,230,.26) 23px,transparent 25px 42px);animation:rain .45s linear infinite}@keyframes rain{to{background-position:-30px 60px}}#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}.ripple{position:absolute;width:18px;height:18px;border:2px solid var(--accent);border-radius:50%;pointer-events:none;animation:ripple 1.5s ease-out forwards}@keyframes ripple{to{width:190px;height:190px;opacity:0;transform:translate(-86px,-86px)}}.steam{position:absolute;width:8px;height:55px;border-radius:50%;background:linear-gradient(90deg,transparent,rgba(240,240,230,.4),transparent);filter:blur(4px);animation:steam 2.4s infinite ease-out}@keyframes steam{to{transform:translateY(-80px) translateX(12px);opacity:0}}
 #status{position:fixed;z-index:500;left:50%;top:50%;transform:translate(-50%,-50%);max-width:min(440px,88vw);padding:16px 18px;background:rgba(5,10,8,.96);border:1px solid rgba(255,255,255,.16);border-radius:12px;font-size:10px;line-height:1.65;display:none;box-shadow:0 20px 60px #000}.show{display:block!important}.closeMsg{float:right;background:none;border:0;color:#aaa;font-size:16px}
-#voiceMemo{position:fixed;z-index:405;left:50%;bottom:18px;transform:translateX(-50%);width:min(360px,calc(100vw - 30px));padding:10px 12px;border-radius:13px}.vmTop{display:flex;justify-content:space-between;align-items:center}.vmTitle{font-size:7px;letter-spacing:.18em}.vmState{font-size:6px;color:#8e9993}.vmBtns{display:flex;gap:6px;margin-top:7px}.vmBtn{border:1px solid rgba(255,255,255,.14);background:#101714;color:#eee;border-radius:15px;padding:6px 10px;font-size:7px;letter-spacing:.1em}.vmBtn.recOn{border-color:#ff4b4b;color:#fff;box-shadow:0 0 14px rgba(255,40,40,.2)}.vmHint{font-size:6px;color:#68736d;margin-top:6px}.object.voiceObj .objCore{border-color:#ff9a3d}.object.voiceObj.playing .objCore{border-color:#7dffa5}.object.voiceObj{z-index:265}@media(max-width:760px){/* voice memo is now a dock */header{left:10px;top:9px}.brand{font-size:18px}.tag{font-size:6px}#hud{right:7px;top:7px;width:220px;padding:8px}.wave{height:34px}#now{right:7px;top:132px;width:220px;padding:8px}#sampler{left:6px;right:6px;bottom:6px;width:auto;padding:8px}.sampleName{font-size:13px}.objCore{width:43px;height:43px;font-size:18px}.objLabel{font-size:5.3px}#spring{left:25%;top:18%}#onsen{left:50%;top:23%}#riverObj{left:10%;top:40%}#shrine{left:73%;top:27%}#swing{left:78%;top:41%}#campfire{left:43%;top:48%}#flameObj{left:59%;top:46%}#cooking{left:73%;top:52%}#sauna{left:25%;top:54%}#whole{left:48%;top:57%}.ground{height:61%}.river{width:33%;height:73%;top:17%}.camp{transform:translate(-50%,-50%) scale(.78);top:46%}#keys{height:45px}.btn{padding:5px 8px;font-size:6px}}
-@media(max-width:430px){#hud{width:205px}.brand{font-size:16px}.tag{font-size:5px}#now{width:205px;top:126px}.objCore{width:39px;height:39px;font-size:16px}#sampler{font-size:8px}.key{font-size:6px}}
+#voiceMemo{position:fixed;z-index:405;left:50%;bottom:18px;transform:translateX(-50%);width:min(360px,calc(100vw - 30px));padding:10px 12px;border-radius:13px}.vmTop{display:flex;justify-content:space-between;align-items:center}.vmTitle{font-size:7px;letter-spacing:.18em}.vmState{font-size:6px;color:#8e9993}.vmBtns{display:flex;gap:6px;margin-top:7px}.vmBtn{border:1px solid rgba(255,255,255,.14);background:#101714;color:#eee;border-radius:15px;padding:6px 10px;font-size:7px;letter-spacing:.1em}.vmBtn.recOn{border-color:#ff4b4b;color:#fff;box-shadow:0 0 14px rgba(255,40,40,.2)}.vmHint{font-size:6px;color:#68736d;margin-top:6px}.object.voiceObj .objCore{border-color:#ff9a3d}.object.voiceObj.playing .objCore{border-color:#7dffa5}.object.voiceObj{z-index:265}@media(max-width:760px){/* voice memo is now a dock */header{left:10px;top:9px}.brand{font-size:18px}.tag{font-size:6px}#now{right:7px;top:132px;width:220px;padding:8px}#sampler{left:6px;right:6px;bottom:6px;width:auto;padding:8px}.sampleName{font-size:13px}.objCore{width:43px;height:43px;font-size:18px}.objLabel{font-size:5.3px}#spring{left:25%;top:18%}#onsen{left:50%;top:23%}#riverObj{left:10%;top:40%}#shrine{left:73%;top:27%}#swing{left:78%;top:41%}#campfire{left:43%;top:48%}#flameObj{left:59%;top:46%}#cooking{left:73%;top:52%}#sauna{left:25%;top:54%}#whole{left:48%;top:57%}.ground{height:61%}.river{width:33%;height:73%;top:17%}.camp{transform:translate(-50%,-50%) scale(.78);top:46%}#keys{height:45px}.btn{padding:5px 8px;font-size:6px}}
+@media(max-width:430px){.brand{font-size:16px}.tag{font-size:5px}#now{width:205px;top:126px}.objCore{width:39px;height:39px;font-size:16px}#sampler{font-size:8px}.key{font-size:6px}}
 
 .nowActions{display:flex;gap:6px;margin-top:7px}.stop.loopOn{border-color:#72e69a;color:#fff;box-shadow:0 0 12px rgba(114,230,154,.2)}.stop.loopOff{color:#9aa59f}.object.kept{filter:brightness(1.15) drop-shadow(0 0 10px rgba(217,243,223,.22))}.object.kept .objCore{border-color:rgba(114,230,154,.72);box-shadow:0 0 0 4px rgba(114,230,154,.07),0 0 18px rgba(114,230,154,.12)}.keepMark{position:absolute;right:-2px;top:-3px;width:8px;height:8px;border-radius:50%;background:#72e69a;box-shadow:0 0 8px rgba(114,230,154,.65);display:none}.object.kept .keepMark{display:block}
 .danger{border-color:rgba(255,70,70,.3)}.fx{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:10px}.fxBtn{border:1px solid rgba(255,255,255,.13);background:#111714;color:#d8ded9;border-radius:8px;padding:7px 3px;font-size:6px;letter-spacing:.1em}.fxBtn.on{color:#fff;border-color:#72e69a;box-shadow:0 0 12px rgba(72,230,122,.2);background:rgba(47,180,90,.13)}
@@ -50,10 +49,10 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
 .voiceDock{position:fixed;z-index:460;right:18px;bottom:18px;display:flex;flex-direction:column;align-items:flex-end;gap:7px}.voiceTab{border:1px solid rgba(255,255,255,.16);background:rgba(4,10,8,.9);color:#dfe9e2;border-radius:16px;padding:7px 12px;font-size:7px;letter-spacing:.16em;box-shadow:0 12px 35px rgba(0,0,0,.35)}.voicePlayer{display:none;width:275px;padding:11px 12px;border-radius:13px}.voiceDock.open .voicePlayer{display:block}.voicePlayerName{font-size:12px;letter-spacing:.08em;margin-top:5px;color:#e8efe9}.voicePlayer.ready .voicePlayerName{color:#9dffb8}.voicePlayer .vmBtns{display:flex;gap:6px;margin-top:7px}.voicePlayer .vmBtn{flex:1}.voicePlayer .vmHint{font-size:6px;color:#68736d;margin-top:7px;line-height:1.5}
 @media(max-width:760px){.voiceDock{right:7px;bottom:7px}.voicePlayer{width:min(255px,calc(100vw - 14px))}.voiceDock.open .voicePlayer{margin-bottom:0}.voiceTab{padding:8px 12px}}
 
-/* NORA TOUCH FIELD V8 */
+/* NORA TOUCH FIELD V10 — KEEP FIX */
 #touchGuide{position:fixed;z-index:340;left:20px;bottom:18px;width:390px;padding:12px 14px;border-radius:13px;pointer-events:none;background:rgba(4,10,8,.78)}
 .tgTitle{font-size:8px;letter-spacing:.2em;color:#dce9df}.tgSub{font-size:7px;line-height:1.55;color:#8f9c95;margin-top:5px}.tgAxis{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:7px;color:#66746c;font-size:6px;letter-spacing:.06em}.tgAxis b{color:#d9f3df;font-weight:500}
-.object.touching{transition:none;z-index:260;filter:brightness(1.45) drop-shadow(0 0 24px rgba(120,255,160,.7))}.object:not(.playing) .objCore{border-color:#ff4b4b;box-shadow:0 0 0 4px rgba(255,55,55,.08),0 0 15px rgba(255,55,55,.12)}.object.playing .objCore{border-color:#7dffa5;box-shadow:0 0 0 4px rgba(90,240,130,.08),0 0 22px rgba(70,240,120,.35)}
+.object.touching{transition:none;z-index:260;filter:brightness(1.45) drop-shadow(0 0 24px rgba(120,255,160,.7))}.object.touching .objCore{transform:scale(1.1)}.object:not(.playing) .objCore{border-color:#ff4b4b;box-shadow:0 0 0 4px rgba(255,55,55,.08),0 0 15px rgba(255,55,55,.12)}.object.playing .objCore{border-color:#7dffa5;box-shadow:0 0 0 4px rgba(90,240,130,.08),0 0 22px rgba(70,240,120,.35)}
 #touchReadout{position:fixed;z-index:450;left:50%;top:72%;transform:translate(-50%,-50%);padding:7px 11px;border:1px solid rgba(120,255,160,.24);border-radius:12px;background:rgba(3,10,7,.72);font-size:7px;letter-spacing:.12em;color:#a8b7ae;opacity:0;transition:opacity .15s;pointer-events:none;backdrop-filter:none}#touchReadout.show{opacity:1}.readoutMain{color:#e7f4ea;font-size:9px}
 @media(max-width:760px){#touchGuide{left:7px;right:7px;bottom:7px;width:auto;padding:9px 10px}.tgSub{font-size:6px}.tgAxis{font-size:5.5px}.objCore{touch-action:none}#touchReadout{top:70%}}
 </style>
@@ -79,7 +78,7 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
 <header><div class="brand">NORA</div><div class="tag">FIELD SOUND INSTRUMENT / V2 SAMPLER</div></header>
 <section id="now" class="panel"><div class="nowTitle">NOW SAMPLING</div><div id="nowName" class="nowName">—</div><div id="nowSub" class="nowSub">サウンドポイントを選択してください。</div><div class="nowActions"><button id="stopAll" class="stop">STOP</button><button id="loopBtn" class="stop loopOff">LOOP OFF</button></div><div class="nowActions"><button id="allReset" class="stop">ALL RESET</button><button id="allStop" class="stop">ALL STOP</button><button id="allPlay" class="stop">ALL PLAY</button></div></section>
 <section id="touchGuide" class="panel">
-  <div class="tgTitle">NORA TOUCH FIELD V8</div>
+  <div class="tgTitle">NORA TOUCH FIELD V10</div>
   <div class="tgSub">タップ → PLAY / STOP　｜　ドラッグ → 音を変えてその位置にKEEP　｜　ダブルタップ → ORIGINAL</div>
   <div class="tgAxis"><span>← SLOW</span><b>ORIGINAL</b><span>FAST →</span></div>
   <div class="tgAxis"><span>↓ VOLUME DOWN</span><span>↑ VOLUME UP</span></div>
@@ -90,7 +89,7 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
 <div id="touchReadout"></div><div id="status"></div>
 
 <script>
-/* NORA TOUCH FIELD V8 — stable touch/playback engine
+/* NORA TOUCH FIELD V10 — stable touch/playback engine
    Playback uses native HTMLAudioElement instead of decoding all sounds into Web Audio buffers.
    This keeps memory/CPU low while preserving independent play, loop, speed and volume. */
 const DIR="sounds/";
@@ -166,50 +165,63 @@ async function play(id){
 }
 function stopVoice(id){playToken.set(id,(playToken.get(id)||0)+1);const a=players.get(id);if(!a)return;try{a.pause();a.currentTime=0}catch(e){}players.delete(id);const el=document.querySelector('[data-id="'+id+'"]');if(el)el.classList.remove('playing','active');if(id==='voice'){if(voiceReady)$('#vmState').textContent='READY';$('#vmPlay').classList.remove('active')}updatePlayingState()}
 function stopAll(){[...players.keys()].forEach(stopVoice);$$('.object').forEach(e=>e.classList.remove('touching'))}
-function updatePlayingState(){const p=players.size>0;document.body.classList.toggle('playing',p);const current=selectedId&&players.has(selectedId)?selectedId:(p?[...players.keys()].at(-1):selectedId);if(current){$('#nowName').textContent=labelOf(current);$('#nowSub').textContent=players.has(current)?'再生中 · ドラッグでVOLUME / SPEED / ダブルタップでORIGINAL':'停止中 · ダブルタップでORIGINAL'}else{$('#nowName').textContent='—';$('#nowSub').textContent='サウンドポイントを選択してください。'}updateLoopButton();if(!players.has('voice'))$('#vmPlay').classList.remove('active')}
+function updatePlayingState(){const p=players.size>0;document.body.classList.toggle('playing',p);const current=selectedId&&players.has(selectedId)?selectedId:(p?[...players.keys()].at(-1):selectedId);if(current){$('#nowName').textContent=labelOf(current);$('#nowSub').textContent=players.has(current)?'再生中 · ドラッグでVOLUME / SPEED / KEEP':'停止中 · ダブルタップでORIGINAL'}else{$('#nowName').textContent='—';$('#nowSub').textContent='サウンドポイントを選択してください。'}updateLoopButton();if(!players.has('voice'))$('#vmPlay').classList.remove('active')}
 
-function setOriginalPosition(el,resetAudio=true){const p=originalPos.get(el.id);if(!p)return;el.style.left=p.left;el.style.top=p.top;el.style.transform='';keptOffset.set(el.id,{x:0,y:0});touchParam.set(el.id,{x:0,y:0});el.classList.remove('kept');if(resetAudio){const id=el.dataset.id;applyParams(id);if(players.has(id))setReadout(id,1,1,'ORIGINAL / BYPASS')}}
+function setOriginalPosition(el,resetAudio=true){const p=originalPos.get(el.id);if(!p)return;el.style.left=p.left;el.style.top=p.top;el.style.transform='none';keptOffset.set(el.id,{x:0,y:0});touchParam.set(el.id,{x:0,y:0});el.classList.remove('kept');if(resetAudio){const id=el.dataset.id;applyParams(id);if(players.has(id))setReadout(id,1,1,'ORIGINAL / BYPASS')}}
 function resetToOriginal(el){setOriginalPosition(el,true);selectedId=el.dataset.id;setReadout(el.dataset.id,1,1,'ORIGINAL / BYPASS');updatePlayingState()}
-function beginTouch(e,el){if(e.pointerType==='mouse'&&e.button!==0)return;e.preventDefault();e.stopPropagation();const b=touchParam.get(el.id)||{x:0,y:0};activeDrag={el,id:el.dataset.id,startX:e.clientX,startY:e.clientY,pointerId:e.pointerId,baseX:b.x,baseY:b.y};dragMoved=false;el.setPointerCapture?.(e.pointerId);el.classList.add('touching')}
-function moveTouch(e){if(!activeDrag)return;const a=activeDrag,el=a.el,dx=e.clientX-a.startX,dy=e.clientY-a.startY;if(Math.hypot(dx,dy)>5)dragMoved=true;const px=Math.max(-1,Math.min(1,a.baseX+dx/TOUCH_RANGE)),py=Math.max(-1,Math.min(1,a.baseY+dy/TOUCH_RANGE));el.style.transform=`translate(${px*TOUCH_RANGE}px,${py*TOUCH_RANGE}px) scale(1.1)`;touchParam.set(el.id,{x:px,y:py});const p=players.get(a.id);if(p){applyParams(a.id)}else{const v=volumeFor((py+1)/2),s=speedFor((px+1)/2);setReadout(a.id,v,s,effectForTouch((px+1)/2))}}
+function beginTouch(e,el){
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  e.preventDefault();e.stopPropagation();
+  const scene=$('#scene');
+  const sr=scene.getBoundingClientRect(),er=el.getBoundingClientRect();
+  activeDrag={el,id:el.dataset.id,pointerId:e.pointerId,sceneRect:sr,offsetX:e.clientX-er.left,offsetY:e.clientY-er.top};
+  dragMoved=false;
+  el.setPointerCapture?.(e.pointerId);
+  el.classList.add('touching');
+}
+function moveTouch(e){
+  if(!activeDrag)return;
+  const a=activeDrag,el=a.el,sr=a.sceneRect;
+  const dx=e.clientX-(sr.left+a.offsetX),dy=e.clientY-(sr.top+a.offsetY);
+  if(Math.hypot(dx,dy)>5)dragMoved=true;
+  const maxX=Math.max(0,sr.width-el.offsetWidth),maxY=Math.max(0,sr.height-el.offsetHeight);
+  const x=Math.max(0,Math.min(maxX,e.clientX-sr.left-a.offsetX));
+  const y=Math.max(0,Math.min(maxY,e.clientY-sr.top-a.offsetY));
+  const leftPct=Math.max(0,Math.min(100,x/sr.width*100));
+  const topPct=Math.max(0,Math.min(100,y/sr.height*100));
+  el.style.left=leftPct+'%';
+  el.style.top=topPct+'%';
+  el.style.transform='none';
+  const nx=Math.max(-1,Math.min(1,(e.clientX-(sr.left+sr.width*.5))/(sr.width*.5)));
+  const ny=Math.max(-1,Math.min(1,(e.clientY-(sr.top+sr.height*.5))/(sr.height*.5)));
+  touchParam.set(el.id,{x:nx,y:ny});
+  const p=players.get(a.id);
+  if(p){applyParams(a.id)}else{const v=volumeFor((ny+1)/2),s=speedFor((nx+1)/2);setReadout(a.id,v,s,effectForTouch((nx+1)/2))}
+}
 function endTouch(e){
   if(!activeDrag)return;
   const a=activeDrag,el=a.el,id=a.id;
   el.classList.remove('touching');
   try{el.releasePointerCapture?.(a.pointerId)}catch(err){}
   activeDrag=null;
-
   if(dragMoved){
     el.classList.add('kept');
     selectedId=id;
+    const left=el.style.left,top=el.style.top;
     const p=touchParam.get(id)||{x:0,y:0};
-    keptOffset.set(id,{x:p.x*TOUCH_RANGE,y:p.y*TOUCH_RANGE});
-    el.style.transform=`translate(${p.x*TOUCH_RANGE}px,${p.y*TOUCH_RANGE}px)`;
+    keptOffset.set(id,{x:p.x,y:p.y,left,top});
+    el.style.transform='none';
     updatePlayingState();
     return;
   }
-
-  // Double-tap state is per icon, so tapping RIVER then CAMPFIRE
-  // cannot accidentally reset the wrong icon.
   const now=performance.now();
   const s=tapState.get(id)||{last:0,timer:null};
-
   if(now-s.last<360){
-    clearTimeout(s.timer);
-    s.timer=null;
-    s.last=0;
-    tapState.set(id,s);
-    resetToOriginal(el);
-    return;
+    clearTimeout(s.timer);s.timer=null;s.last=0;tapState.set(id,s);
+    resetToOriginal(el);return;
   }
-
-  s.last=now;
-  clearTimeout(s.timer);
-  s.timer=setTimeout(()=>{
-    s.timer=null;
-    play(id);
-  },230);
-  tapState.set(id,s);
+  s.last=now;clearTimeout(s.timer);
+  s.timer=setTimeout(()=>{s.timer=null;play(id)},230);tapState.set(id,s);
 }
 
 $$('.object').forEach(el=>{originalPos.set(el.id,{left:getComputedStyle(el).left,top:getComputedStyle(el).top});touchParam.set(el.id,{x:0,y:0});keptOffset.set(el.id,{x:0,y:0});tapState.set(el.id,{last:0,timer:null});const mark=document.createElement('span');mark.className='keepMark';el.appendChild(mark);el.addEventListener('pointerdown',e=>beginTouch(e,el));el.addEventListener('pointermove',moveTouch);el.addEventListener('pointerup',endTouch);el.addEventListener('pointercancel',endTouch)});
@@ -240,7 +252,6 @@ function trigger(id){const el=document.querySelector('[data-id="'+id+'"]');if(!e
 
 /* Keep the scene light: 10 small background trees instead of 28 filtered DOM elements. */
 const forest=$('#forest');if(forest){forest.innerHTML='';for(let i=0;i<10;i++){const t=document.createElement('span');t.style.cssText=`position:absolute;left:${Math.random()*100}%;top:${30+Math.random()*62}%;width:0;height:0;border-left:28px solid transparent;border-right:28px solid transparent;border-bottom:${60+Math.random()*55}px solid #10281f;opacity:.8`;forest.appendChild(t)}}
-
 
 </script>
 </body></html>
