@@ -77,12 +77,6 @@ header{position:fixed;z-index:100;left:28px;top:20px;text-shadow:0 2px 16px #000
   </div>
 </div>
 <header><div class="brand">NORA</div><div class="tag">FIELD SOUND INSTRUMENT / V2 SAMPLER</div></header>
-<section id="hud" class="panel">
-  <div class="hudtop"><span>STEREO LEVEL / L</span><span id="ldb">-∞ dB</span></div><div class="meter"><div id="lFill" class="fill"></div></div><div class="ticks"><span>-24</span><span>-12</span><span>-6</span><span>0</span></div>
-  <div class="hudtop"><span>STEREO LEVEL / R</span><span id="rdb">-∞ dB</span></div><div class="meter"><div id="rFill" class="fill"></div></div><div class="ticks"><span>-24</span><span>-12</span><span>-6</span><span>0</span></div>
-  <div class="recrow"><span id="rec" class="rec"></span><span id="recText">SIGNAL / STANDBY</span></div>
-  <svg class="wave" viewBox="0 0 330 50" preserveAspectRatio="none"><defs><linearGradient id="waveGrad"><stop offset="0" stop-color="#ef332e"/><stop offset=".35" stop-color="#ff8b22"/><stop offset=".65" stop-color="#ffe047"/><stop offset="1" stop-color="#42e07b"/></linearGradient></defs><path id="wavePath" class="waveLine" d="M0 25 L330 25"/></svg>
-</section>
 <section id="now" class="panel"><div class="nowTitle">NOW SAMPLING</div><div id="nowName" class="nowName">—</div><div id="nowSub" class="nowSub">サウンドポイントを選択してください。</div><div class="nowActions"><button id="stopAll" class="stop">STOP</button><button id="loopBtn" class="stop loopOff">LOOP OFF</button></div><div class="nowActions"><button id="allReset" class="stop">ALL RESET</button><button id="allStop" class="stop">ALL STOP</button><button id="allPlay" class="stop">ALL PLAY</button></div></section>
 <section id="touchGuide" class="panel">
   <div class="tgTitle">NORA TOUCH FIELD V8</div>
@@ -172,7 +166,7 @@ async function play(id){
 }
 function stopVoice(id){playToken.set(id,(playToken.get(id)||0)+1);const a=players.get(id);if(!a)return;try{a.pause();a.currentTime=0}catch(e){}players.delete(id);const el=document.querySelector('[data-id="'+id+'"]');if(el)el.classList.remove('playing','active');if(id==='voice'){if(voiceReady)$('#vmState').textContent='READY';$('#vmPlay').classList.remove('active')}updatePlayingState()}
 function stopAll(){[...players.keys()].forEach(stopVoice);$$('.object').forEach(e=>e.classList.remove('touching'))}
-function updatePlayingState(){const p=players.size>0;document.body.classList.toggle('playing',p);$('#rec').classList.toggle('on',p);$('#recText').textContent=p?'REC / LIVE FIELD':'SIGNAL / STANDBY';const current=selectedId&&players.has(selectedId)?selectedId:(p?[...players.keys()].at(-1):selectedId);if(current){$('#nowName').textContent=labelOf(current);$('#nowSub').textContent=players.has(current)?'再生中 · ドラッグでVOLUME / SPEED / ダブルタップでORIGINAL':'停止中 · ダブルタップでORIGINAL'}else{$('#nowName').textContent='—';$('#nowSub').textContent='サウンドポイントを選択してください。'}updateLoopButton();if(!players.has('voice'))$('#vmPlay').classList.remove('active')}
+function updatePlayingState(){const p=players.size>0;document.body.classList.toggle('playing',p);const current=selectedId&&players.has(selectedId)?selectedId:(p?[...players.keys()].at(-1):selectedId);if(current){$('#nowName').textContent=labelOf(current);$('#nowSub').textContent=players.has(current)?'再生中 · ドラッグでVOLUME / SPEED / ダブルタップでORIGINAL':'停止中 · ダブルタップでORIGINAL'}else{$('#nowName').textContent='—';$('#nowSub').textContent='サウンドポイントを選択してください。'}updateLoopButton();if(!players.has('voice'))$('#vmPlay').classList.remove('active')}
 
 function setOriginalPosition(el,resetAudio=true){const p=originalPos.get(el.id);if(!p)return;el.style.left=p.left;el.style.top=p.top;el.style.transform='';keptOffset.set(el.id,{x:0,y:0});touchParam.set(el.id,{x:0,y:0});el.classList.remove('kept');if(resetAudio){const id=el.dataset.id;applyParams(id);if(players.has(id))setReadout(id,1,1,'ORIGINAL / BYPASS')}}
 function resetToOriginal(el){setOriginalPosition(el,true);selectedId=el.dataset.id;setReadout(el.dataset.id,1,1,'ORIGINAL / BYPASS');updatePlayingState()}
@@ -247,7 +241,6 @@ function trigger(id){const el=document.querySelector('[data-id="'+id+'"]');if(!e
 /* Keep the scene light: 10 small background trees instead of 28 filtered DOM elements. */
 const forest=$('#forest');if(forest){forest.innerHTML='';for(let i=0;i<10;i++){const t=document.createElement('span');t.style.cssText=`position:absolute;left:${Math.random()*100}%;top:${30+Math.random()*62}%;width:0;height:0;border-left:28px solid transparent;border-right:28px solid transparent;border-bottom:${60+Math.random()*55}px solid #10281f;opacity:.8`;forest.appendChild(t)}}
 
-/* Lightweight visual meter. It does not analyse audio; it simply reflects playback activity without a permanent AudioContext. */
-let visualFrame=0;function visualLoop(now){if(players.size){visualFrame++;if((visualFrame%5)===0){const base=18+Math.abs(Math.sin(now*.004))*60,boost=Math.min(22,[...players.values()].reduce((m,a)=>Math.max(m,a.volume),0)*22);const v=Math.min(100,base+boost);$('#lFill').style.width=v+'%';$('#rFill').style.width=Math.max(0,v-4)+'%';$('#ldb').textContent='LIVE';$('#rdb').textContent='LIVE';const wave=$('#wavePath');if(wave){let d='';for(let i=0;i<70;i++){const y=25+Math.sin(i*.55+now*.008)*((v/100)*8);d+=(i?'L':'M')+(i/69*330).toFixed(1)+' '+y.toFixed(1)+' '}wave.setAttribute('d',d)}}}else{if((visualFrame++%12)===0){$('#lFill').style.width='0%';$('#rFill').style.width='0%';$('#ldb').textContent='-∞ dB';$('#rdb').textContent='-∞ dB';$('#wavePath').setAttribute('d','M0 25 L330 25')}}requestAnimationFrame(visualLoop)}requestAnimationFrame(visualLoop);
+
 </script>
 </body></html>
